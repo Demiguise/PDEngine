@@ -17,7 +17,7 @@ There are a few core areas I want to flesh out before I even think about delving
 
 =======
 
-1. The Renderer
+- The Renderer
 
 I'll initially be working with DX11 to make a renderer for this engine. I'm making sure that everything is as far removed
 from each other as I can, in the event that I wish to change over to another renderer or have both in the same project.
@@ -25,14 +25,14 @@ from each other as I can, in the event that I wish to change over to another ren
 Minimal Task -> Render out a box/Nyx model from EVE Online. No Textures, nothing special just a straight forward render
 so I know I have something to work from.
 
-2. Physics
+- Physics
 
 Pretty straight forward concept for a core engine area. I'm unsure how I'll deal with this but I'm sure it'll be a lot of 
 fun working with physics again. I've not had to do it for quite some time :)
 
 Minimal Task -> Two geometric objects (Sphere/Box) collide and react with each-other realistically.
 
-3. Audio
+- Audio
 
 Another straight forward but mysterious area to develop onto. I've never looked into dealing with audio in any real 
 capacity so I have no idea what to expect and how to access the different devices. Part of me believes it will be as
