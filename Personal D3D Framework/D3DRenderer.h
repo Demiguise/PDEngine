@@ -1,21 +1,23 @@
 #pragma once
-#include "Common.h"
-#include "Entity.h"
+#include "Renderer.h"
+#include "D3DBufferManager.h"
+#include "D3DCommon.h"
 #include <D3DX11.h>
 #include <d3dx11effect.h>
 #include <Windows.h>
 #include <DxErr.h>
 
-
-class D3DRenderer
+class D3DRenderer : public Renderer
 {
 public: //Functions
-	D3DRenderer(HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWidth);
+	D3DRenderer (HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWidth);
 	~D3DRenderer();
 	bool Init();
 	void UpdateScene(std::vector<Entity> activeEntities, XMMATRIX* viewMatrix, bool refreshBuffers);
 	void DrawScene();
 	void OnResize(UINT newHeight, UINT newWidth);
+	void CreateBuffer(ModelData newModel);
+	void DestroyBuffer();
 
 private:
 	bool InitDirect3D();
@@ -57,19 +59,3 @@ private:
 	XMMATRIX mProjMatrix;
 };
 
-//Helpful Macros (Shameless 'Stolen' from Frank D Luna)
-
-#define ReleaseCOM(x) { if(x) { x->Release(); x = 0; } }
-
-//Need to have the '\' at the end of the line to say it's a
-//line macro. Since they are usually just a single line.
-#define HR(x)												\
-{															\
-	HRESULT hr = x;											\
-	if (FAILED(hr))											\
-	{														\
-		DXTrace(__FILE__, (DWORD)__LINE__, hr, L#x, true);	\
-	}														\
-}
-
-#define Pi 3.14f

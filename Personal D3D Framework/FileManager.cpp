@@ -61,7 +61,9 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 		}
 	}
 	OutputDebugString(L"Finished reading data from file.\n");
-	return ConstructModelData(lVertices, lNormals, lTexCoords, lFaces);
+	ModelData newModel = ConstructModelData(lVertices, lNormals, lTexCoords, lFaces);
+	newModel.semanticName = fileName;
+	return newModel;
 }
 
 ModelData FileManager::ConstructModelData(	std::vector<XMFLOAT3> verts,

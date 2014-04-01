@@ -21,7 +21,7 @@ public:
 
 	FileManager* mFileManager;
 	GameWindow* mGameWindow;
-	D3DRenderer* mRenderer;
+	Renderer* mRenderer;
 	SceneManager* mSceneManager;
 };
 

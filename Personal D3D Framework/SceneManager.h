@@ -9,7 +9,7 @@ class SceneManager
 public:
 	SceneManager(FileManager* fileManager);
 	~SceneManager();
-	Entity CreateEntity(LPSTR EntityName, LPCSTR meshName);
+	Entity CreateEntity(LPCSTR EntityName, LPCSTR meshName);
 	void DestroyEntity(UINT EntityUID);
 	std::vector<Entity> FindSceneObjects();
 	UINT GenerateUID();

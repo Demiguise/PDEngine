@@ -11,7 +11,7 @@ SceneManager::~SceneManager()
 
 }
 
-Entity SceneManager::CreateEntity(LPSTR EntityName, LPCSTR meshFileName)
+Entity SceneManager::CreateEntity(LPCSTR EntityName, LPCSTR meshFileName)
 {
 	Entity newEntity(GenerateUID());
 	ModelData newMesh;

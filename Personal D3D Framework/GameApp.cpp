@@ -12,15 +12,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 GameApp::GameApp(HINSTANCE hInstance)
 {
-
 	mGameWindow = new GameWindow(this, hInstance, mClientHeight, mClientWidth);
-	mRenderer = new D3DRenderer(hInstance, mGameWindow->GetMainWHandle(), mClientHeight, mClientWidth);
 	mFileManager = new FileManager;
 	mSceneManager = new SceneManager(mFileManager);
-	Camera mCamera = Camera(XMFLOAT3(0.0f, 0.0f, -10.0f));
+	mRenderer = &D3DRenderer(hInstance, mGameWindow->GetMainWHandle(), mClientHeight, mClientWidth);
+	Camera mCamera = Camera(XMFLOAT3(10.0f, 10.0f, -10.0f));
 	mSceneManager->SetActiveCamera(mCamera);
-	mSceneManager->CreateEntity("Box", "Models/Box.obj");
-	mSceneManager->availableEntities[0].position = XMFLOAT3(0.0f, 0.0f, 4.0f);
+	
+	mSceneManager->CreateEntity("Box0", "Models/Box.obj");
+	mSceneManager->CreateEntity("Box1", "Models/Box.obj");
+	mSceneManager->availableEntities[0].position = XMFLOAT3(1.5f, 0.0f, 1.5f);
 	//mSceneManager->CreateEntity("Nyx0", "Models/Nyx.obj");
 	//mSceneManager->CreateEntity("Nyx1", "Models/Nyx.obj");
 	//mSceneManager->CreateEntity("Nyx2", "Models/Nyx.obj");

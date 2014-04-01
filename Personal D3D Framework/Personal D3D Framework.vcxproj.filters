@@ -19,12 +19,27 @@
     <Filter Include="Effects">
       <UniqueIdentifier>{63f701c0-2b22-45d8-a18d-df790c703106}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Rendering">
+      <UniqueIdentifier>{3c25b2a2-a9bb-42d1-beab-3c546a1570e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering\DX11">
+      <UniqueIdentifier>{170eea4b-25af-458d-8910-ed90d0a373f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{934ad0c3-5f8e-4ee4-9c44-718878f76bb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering\DX11">
+      <UniqueIdentifier>{e4dda962-223b-4678-bddd-6adc039625f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering\OpenGL">
+      <UniqueIdentifier>{c0c00d36-cfce-43b9-80ce-3c52bcb45ea1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering\OpenGL">
+      <UniqueIdentifier>{2ccfe1eb-fc24-4a09-a9da-edff721b9bb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D3DRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameApp.h">
@@ -45,15 +60,30 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="D3DRenderer.h">
+      <Filter>Header Files\Rendering\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLRenderer.h">
+      <Filter>Header Files\Rendering\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferManager.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DBufferManager.h">
+      <Filter>Header Files\Rendering\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DCommon.h">
+      <Filter>Header Files\Rendering\DX11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D3DRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameApp.cpp">
@@ -70,6 +100,21 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DRenderer.cpp">
+      <Filter>Source Files\Rendering\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLRenderer.cpp">
+      <Filter>Source Files\Rendering\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferManager.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DBufferManager.cpp">
+      <Filter>Source Files\Rendering\DX11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

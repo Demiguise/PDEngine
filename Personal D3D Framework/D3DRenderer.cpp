@@ -12,6 +12,7 @@ D3DRenderer::D3DRenderer(HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWid
 		sceneObjData(0)
 
 {
+	rendererName = "DirectX11";
 	mHInst = hInstance;
 	mHWnd = hWnd;	
 	XMMATRIX i = XMMatrixIdentity(); //Quickly initializing the Projection and View matrices.
@@ -32,6 +33,7 @@ bool D3DRenderer::Init()
 	InitEffects();
 	if (!InitBuffers()) { return false; }
 	CreateInputLayer();
+	mBufferManager = new D3DBufferManager();
 	return true;
 }
 
@@ -90,7 +92,7 @@ bool D3DRenderer::InitBuffers()
 	vbd.Usage = D3D11_USAGE_DYNAMIC;
 	vbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.ByteWidth = sizeof(Vertex) * 8;
+	vbd.ByteWidth = sizeof(Vertex) * 400; // This seems silly and not really "Dynamic"
 	vbd.StructureByteStride = 0;
 	vbd.MiscFlags = 0;
 
@@ -100,10 +102,10 @@ bool D3DRenderer::InitBuffers()
 	ibd.Usage = D3D11_USAGE_DYNAMIC;
 	ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.ByteWidth = sizeof(UINT) * 36;
+	ibd.ByteWidth = sizeof(UINT) * 400;
 	ibd.StructureByteStride = 0;
 	ibd.MiscFlags = 0;
-	
+
 	md3dDevice->CreateBuffer(&ibd, NULL, &mIBuffer);
 
 	return true;
@@ -223,8 +225,8 @@ void D3DRenderer::UpdateScene(std::vector<Entity> activeEntities, XMMATRIX* view
 		ZeroMemory(&iResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 		HR(mDeviceContext->Map(mIBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &iResource));
 		//Next we have the new data applied to the new resources
-		vResource.pData = &sceneVertices;
-		iResource.pData = &sceneIndicies;
+		memcpy(vResource.pData, &sceneVertices[0], sizeof(Vertex) * sceneVertices.size());
+		memcpy(iResource.pData, &sceneIndicies[0], sizeof(UINT) * sceneIndicies.size());
 		//Finally we unmap each buffer
 		mDeviceContext->Unmap(mVBuffer, 0);
 		mDeviceContext->Unmap(mIBuffer, 0);
@@ -297,4 +299,9 @@ XMMATRIX D3DRenderer::BuildWVPMatrix(XMFLOAT3 wPos, XMMATRIX* view, XMMATRIX* pr
 	XMMATRIX lProj = *proj;
 	XMMATRIX newMatrix = worldMatrix * lView * lProj;
 	return newMatrix;
+}
+
+void D3DRenderer::CreateBuffer(ModelData newModel)
+{
+	
 }

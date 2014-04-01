@@ -27,6 +27,7 @@ struct ModelData
 {
 	ModelData() {}
 	ModelData(std::vector<Vertex> iVData, std::vector<UINT> iIData) {}
+	LPCSTR semanticName;
 	std::vector<Vertex> vData;
 	std::vector<UINT> iData;
 };
