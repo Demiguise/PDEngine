@@ -8,9 +8,14 @@ class D3DBufferManager :
 	public BufferManager
 {
 public:
-	D3DBufferManager(void);
-	~D3DBufferManager(void);
-	std::map<LPCSTR, bufferData> bufferMap;
-	void InitNewBuffer (ID3D11Device* md3dDevice, ModelData newModelData);
+	D3DBufferManager(ID3D11Device* mDevice);
+	~D3DBufferManager();
+	void InitNewBuffer (Entity* newEntity);
+	void DestroyBuffer (Entity* entityToDestroy);
+	std::vector<packedBufferData> GrabSceneBuffers ();
+	std::map<Entity*, bufferData> bufferMap;
+
+private:
+	ID3D11Device* md3dDevice;
 };
 

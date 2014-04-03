@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "D3DBufferManager.h"
 #include "D3DCommon.h"
+#include "Entity.h"
 #include <D3DX11.h>
 #include <d3dx11effect.h>
 #include <Windows.h>
@@ -13,17 +14,15 @@ public: //Functions
 	D3DRenderer (HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWidth);
 	~D3DRenderer();
 	bool Init();
-	void UpdateScene(std::vector<Entity> activeEntities, XMMATRIX* viewMatrix, bool refreshBuffers);
+	void UpdateScene(XMMATRIX* viewMatrix);
 	void DrawScene();
 	void OnResize(UINT newHeight, UINT newWidth);
-	void CreateBuffer(ModelData newModel);
-	void DestroyBuffer();
+	void CreateBuffer(Entity* newEnt);
+	void DestroyBuffer(Entity* entity);
 
 private:
 	bool InitDirect3D();
 	bool InitBuffers();
-	void ConCatBufferData(std::vector<Entity> activeEntities, 
-		std::vector<Vertex>* oVBData, std::vector<UINT>* oIBData);
 	void CreateInputLayer();
 	void InitEffects();
 	XMMATRIX BuildWVPMatrix(XMFLOAT3 wPos, XMMATRIX* view, XMMATRIX* proj);
@@ -42,6 +41,7 @@ private:
 	D3D11_VIEWPORT mScreenViewport;
 
 	//Buffers
+	D3DBufferManager* mBufferManager;
 	ID3D11Buffer* mVBuffer;
 	ID3D11Buffer* mIBuffer;
 
@@ -54,7 +54,6 @@ private:
 	int mWindowWidth;
 
 	//Others
-	std::vector<ObjRenderData> sceneObjData;
 	XMMATRIX mCamViewMatrix;
 	XMMATRIX mProjMatrix;
 };

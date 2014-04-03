@@ -13,9 +13,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 GameApp::GameApp(HINSTANCE hInstance)
 {
 	mGameWindow = new GameWindow(this, hInstance, mClientHeight, mClientWidth);
+	mRenderer = new D3DRenderer(hInstance, mGameWindow->GetMainWHandle(), mClientHeight, mClientWidth);
 	mFileManager = new FileManager;
-	mSceneManager = new SceneManager(mFileManager);
-	mRenderer = &D3DRenderer(hInstance, mGameWindow->GetMainWHandle(), mClientHeight, mClientWidth);
+	mSceneManager = new SceneManager(mFileManager, mRenderer);
 	Camera mCamera = Camera(XMFLOAT3(10.0f, 10.0f, -10.0f));
 	mSceneManager->SetActiveCamera(mCamera);
 	
@@ -63,10 +63,8 @@ int GameApp::Run(void)
 		}
 		else
 		{
-			std::vector<Entity> sceneObjects = mSceneManager->FindSceneObjects();
-			bool sceneChange = mSceneManager->sceneChangeThisFrame;
 			XMMATRIX camViewMatrix = mSceneManager->activeCamera.GetViewMatrix();
-			mRenderer->UpdateScene(sceneObjects, &camViewMatrix, sceneChange);
+			mRenderer->UpdateScene(&camViewMatrix);
 			mRenderer->DrawScene();
 		}
 	}

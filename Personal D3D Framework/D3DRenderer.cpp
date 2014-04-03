@@ -8,9 +8,7 @@ D3DRenderer::D3DRenderer(HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWid
 		mDepthStencilBuffer(0),
 		mDepthStencilView(0),
 		mRenderTargetView(0),
-		mSwapChain(0),
-		sceneObjData(0)
-
+		mSwapChain(0)
 {
 	rendererName = "DirectX11";
 	mHInst = hInstance;
@@ -33,7 +31,7 @@ bool D3DRenderer::Init()
 	InitEffects();
 	if (!InitBuffers()) { return false; }
 	CreateInputLayer();
-	mBufferManager = new D3DBufferManager();
+	mBufferManager = new D3DBufferManager(md3dDevice);
 	return true;
 }
 
@@ -208,33 +206,15 @@ void D3DRenderer::OnResize(UINT newHeight, UINT newWidth)
 	mProjMatrix = XMMatrixPerspectiveFovLH(0.25f*Pi, newWidth/newHeight, 1.0f, 1000.0f);
 }
 
-void D3DRenderer::UpdateScene(std::vector<Entity> activeEntities, XMMATRIX* viewMatrix, bool refreshBuffers)
+void D3DRenderer::UpdateScene(XMMATRIX* viewMatrix)
 {
 	mCamViewMatrix = *viewMatrix;
-	if (refreshBuffers)
-	{
-		//We make the new concatanated versions of the buffers.
-		std::vector<Vertex> sceneVertices;
-		std::vector<UINT> sceneIndicies;
-		ConCatBufferData(activeEntities, &sceneVertices, &sceneIndicies);
-		//Then we remap the data to the buffers.
-		D3D11_MAPPED_SUBRESOURCE vResource;
-		ZeroMemory(&vResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		HR(mDeviceContext->Map(mVBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vResource));
-		D3D11_MAPPED_SUBRESOURCE iResource;
-		ZeroMemory(&iResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		HR(mDeviceContext->Map(mIBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &iResource));
-		//Next we have the new data applied to the new resources
-		memcpy(vResource.pData, &sceneVertices[0], sizeof(Vertex) * sceneVertices.size());
-		memcpy(iResource.pData, &sceneIndicies[0], sizeof(UINT) * sceneIndicies.size());
-		//Finally we unmap each buffer
-		mDeviceContext->Unmap(mVBuffer, 0);
-		mDeviceContext->Unmap(mIBuffer, 0);
-	}
 }
 
 void D3DRenderer::DrawScene()
 {
+	std::vector<packedBufferData> sceneData = mBufferManager->GrabSceneBuffers();
+
 	float bgColor[4] = {0.69f, 0.77f, 0.87f, 1.0f};
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView, bgColor);
 	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -242,24 +222,23 @@ void D3DRenderer::DrawScene()
 	mDeviceContext->IASetInputLayout(mInputLayout);
 	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
-	UINT stride = sizeof(Vertex);
-	UINT offset = 0;
-	mDeviceContext->IASetVertexBuffers(0, 1, &mVBuffer, &stride, &offset);
-	mDeviceContext->IASetIndexBuffer(mIBuffer, DXGI_FORMAT_R32_UINT, 0);
-	
 	ID3DX11EffectMatrixVariable* mEffectWorldViewProj = mEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
 
 	D3DX11_TECHNIQUE_DESC techDesc;
 	mETech->GetDesc(&techDesc);
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
 	for(UINT p = 0 ; p < techDesc.Passes ; ++p)
 	{
-		for (UINT i = 0 ; i < sceneObjData.size() ; i++)
+		for (UINT i = 0 ; i < sceneData.size() ; i++)
 		{
-			XMMATRIX wvpMatrix = BuildWVPMatrix(sceneObjData[i].position, &mCamViewMatrix, &mProjMatrix);
+			mDeviceContext->IASetVertexBuffers(0, 1, &sceneData[i].bufferContents.vertexBuffer, &stride, &offset);
+			mDeviceContext->IASetIndexBuffer(sceneData[i].bufferContents.indexBuffer , DXGI_FORMAT_R32_UINT, 0);
+			XMMATRIX wvpMatrix = BuildWVPMatrix(sceneData[i].owningEntity->position, &mCamViewMatrix, &mProjMatrix);
 			mEffectWorldViewProj->SetMatrix(reinterpret_cast<float*>(&wvpMatrix));
 			mETech->GetPassByIndex(p)->Apply(0, mDeviceContext);
-			mDeviceContext->DrawIndexed(sceneObjData[i].iCount,
-				sceneObjData[i].startIndLoc, sceneObjData[i].baseVertLoc);
+			mDeviceContext->DrawIndexed(sceneData[i].bufferContents.iCount, 0, 0);
 		}
 	}
 
@@ -267,28 +246,13 @@ void D3DRenderer::DrawScene()
 	mSwapChain->Present(0,0);
 }
 
-void D3DRenderer::ConCatBufferData(std::vector<Entity> activeEntities, 
-				std::vector<Vertex>* oVBData, std::vector<UINT>* oIBData)
+void D3DRenderer::CreateBuffer(Entity* newEnt)
 {
-	sceneObjData.clear();
-	std::vector<Vertex>::iterator vIT;
-	std::vector<UINT>::iterator iIT;
-	for (UINT i = 0 ; i < activeEntities.size() ; i++)
-	{
-		//Adding to scene render data
-		ObjRenderData newObj;
-		newObj.iCount = activeEntities[i].mesh.iData.size();
-		newObj.startIndLoc = oIBData->size();
-		newObj.baseVertLoc = oVBData->size();
-		newObj.position = activeEntities[i].position;
-		sceneObjData.push_back(newObj);
+	mBufferManager->InitNewBuffer(newEnt);
+}
 
-		//Actual concatenation of buffer data
-		vIT = oVBData->end();
-		iIT = oIBData->end();
-		oVBData->insert(vIT, activeEntities[i].mesh.vData.begin(), activeEntities[i].mesh.vData.end());
-		oIBData->insert(iIT, activeEntities[i].mesh.iData.begin(), activeEntities[i].mesh.iData.end());
-	}
+void D3DRenderer::DestroyBuffer(Entity* entity)
+{
 
 }
 
@@ -299,9 +263,4 @@ XMMATRIX D3DRenderer::BuildWVPMatrix(XMFLOAT3 wPos, XMMATRIX* view, XMMATRIX* pr
 	XMMATRIX lProj = *proj;
 	XMMATRIX newMatrix = worldMatrix * lView * lProj;
 	return newMatrix;
-}
-
-void D3DRenderer::CreateBuffer(ModelData newModel)
-{
-	
 }

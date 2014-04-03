@@ -1,9 +1,17 @@
+#pragma once
 #include <D3DX11.h>
 
 struct bufferData
 {
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
+	UINT iCount;
+};
+
+struct packedBufferData
+{
+	Entity* owningEntity;
+	bufferData bufferContents;
 };
 
 //Helpful Macros (Shameless 'Stolen' from Frank D Luna)

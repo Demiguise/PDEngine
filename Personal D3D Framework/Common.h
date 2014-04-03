@@ -3,19 +3,13 @@
 #include <xnamath.h>
 #include <vector>
 #include <list>
+#include <deque>
 #include <map>
 #include <string>
 
-struct ObjRenderData
-{
-	XMFLOAT3 position;
-	UINT iCount;
-	UINT startIndLoc;
-	INT baseVertLoc;
-};
-
 struct Vertex
 {
+	Vertex(){}
 	Vertex(const XMFLOAT3& p, const XMFLOAT3& n, const XMFLOAT2& tc)
 		: position(p), normal(n), texCoords(tc){}
 	XMFLOAT3 position;

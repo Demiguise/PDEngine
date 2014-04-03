@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Renderer.h"
 #include "FileManager.h"
 #include "Camera.h"
 
@@ -7,15 +8,15 @@
 class SceneManager
 {
 public:
-	SceneManager(FileManager* fileManager);
+	SceneManager(FileManager* fileManager, Renderer* mRenderer);
 	~SceneManager();
-	Entity CreateEntity(LPCSTR EntityName, LPCSTR meshName);
+	Entity* CreateEntity(LPCSTR EntityName, LPCSTR meshName);
 	void DestroyEntity(UINT EntityUID);
 	std::vector<Entity> FindSceneObjects();
 	UINT GenerateUID();
 	bool sceneChangeThisFrame;
 	
-	std::vector<Entity> availableEntities;
+	std::deque<Entity> availableEntities;
 	Camera activeCamera;
 	void SetActiveCamera(Camera newCam);
 
@@ -25,5 +26,6 @@ private:
 	UINT prevSceneEntityCount;
 	std::map<LPCSTR, ModelData> MeshReference;
 	FileManager* mFileManager;
+	Renderer* mRenderer;
 };
 

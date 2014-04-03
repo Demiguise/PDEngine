@@ -1,8 +1,9 @@
 #include "SceneManager.h"
 
-SceneManager::SceneManager(FileManager* fileManager)
+SceneManager::SceneManager(FileManager* fileManager, Renderer* renderer)
 {
 	mFileManager = fileManager;
+	mRenderer = renderer;
 }
 
 
@@ -11,9 +12,10 @@ SceneManager::~SceneManager()
 
 }
 
-Entity SceneManager::CreateEntity(LPCSTR EntityName, LPCSTR meshFileName)
+Entity* SceneManager::CreateEntity(LPCSTR EntityName, LPCSTR meshFileName)
 {
-	Entity newEntity(GenerateUID());
+	availableEntities.push_back(Entity(GenerateUID()));
+	Entity* newEntity = &availableEntities.back();
 	ModelData newMesh;
 	std::map<LPCSTR, ModelData>::iterator it = MeshReference.find(meshFileName);
 	if (it != MeshReference.end())
@@ -25,8 +27,8 @@ Entity SceneManager::CreateEntity(LPCSTR EntityName, LPCSTR meshFileName)
 		newMesh = mFileManager->LoadModelData(meshFileName);
 		MeshReference.insert(std::pair<LPCSTR, ModelData>(meshFileName, newMesh));
 	}
-	newEntity.InitMeshData(&newMesh);
-	availableEntities.push_back(newEntity);
+	newEntity->InitMeshData(&newMesh);
+	mRenderer->CreateBuffer(newEntity);
 	return newEntity;
 }
 
