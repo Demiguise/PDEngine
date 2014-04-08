@@ -121,6 +121,20 @@ void D3DRenderer::CreateInputLayer()
 	mETech->GetPassByIndex(0)->GetDesc(&passDesc);
 	md3dDevice->CreateInputLayout(vertexDesc, 3, passDesc.pIAInputSignature,
 		passDesc.IAInputSignatureSize, &mInputLayout);
+
+	D3D11_RASTERIZER_DESC rSD;
+	rSD.FillMode = D3D11_FILL_WIREFRAME;
+	rSD.CullMode = D3D11_CULL_NONE;
+	rSD.FrontCounterClockwise = FALSE;
+	rSD.DepthBias = 0;
+	rSD.SlopeScaledDepthBias = 0.0f;
+	rSD.DepthBiasClamp = 0.0f;
+	rSD.DepthClipEnable = TRUE;
+	rSD.ScissorEnable = FALSE;
+	rSD.MultisampleEnable = FALSE;
+	rSD.AntialiasedLineEnable = FALSE;
+
+	md3dDevice->CreateRasterizerState(&rSD, &mRSD);
 }
 
 void D3DRenderer::InitEffects()
@@ -222,6 +236,8 @@ void D3DRenderer::DrawScene()
 	mDeviceContext->IASetInputLayout(mInputLayout);
 	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
+	mDeviceContext->RSSetState(mRSD);
+
 	ID3DX11EffectMatrixVariable* mEffectWorldViewProj = mEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
 
 	D3DX11_TECHNIQUE_DESC techDesc;

@@ -11,6 +11,8 @@ public:
 	ModelData LoadModelData(LPCSTR fileName);
 
 private:
+	std::istringstream CleanFaceData (std::string line);
+	std::vector<std::string> SplitString(std::string line, char delim);
 	ModelData ConstructModelData(	std::vector<XMFLOAT3> verts,
 									std::vector<XMFLOAT3> normals,
 									std::vector<XMFLOAT2> texCoords,

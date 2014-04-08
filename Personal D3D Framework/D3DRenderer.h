@@ -39,6 +39,7 @@ private:
 	ID3DX11Effect* mEffect;
 	ID3DX11EffectTechnique* mETech;
 	D3D11_VIEWPORT mScreenViewport;
+	ID3D11RasterizerState* mRSD;
 
 	//Buffers
 	D3DBufferManager* mBufferManager;

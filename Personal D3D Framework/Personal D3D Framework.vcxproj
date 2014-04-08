@@ -83,6 +83,7 @@
     <ClInclude Include="D3DBufferManager.h" />
     <ClInclude Include="D3DCommon.h" />
     <ClInclude Include="D3DRenderer.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="OpenGLRenderer.h" />
@@ -96,6 +97,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3DBufferManager.cpp" />
     <ClCompile Include="D3DRenderer.cpp" />
+    <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="OpenGLRenderer.cpp" />

@@ -50,10 +50,10 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 		}
 		else if (line.substr(0, 2) == "f ")
 		{
-			std::istringstream iss(line.substr(2));
+			std::istringstream iss(CleanFaceData(line.substr(2)));
 			UINT tA, tB, tC;
 			iss >> tA; iss >> tB, iss >> tC;
-			lFaces.push_back(tA); lFaces.push_back(tB); lFaces.push_back(tC);
+			lFaces.push_back(tA - 1); lFaces.push_back(tB - 1); lFaces.push_back(tC - 1); //I'm taking away one here because the .obj files I'm using don't start from 0, rather they start from 1.
 		}
 		else
 		{
@@ -65,6 +65,43 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 	newModel.semanticName = fileName;
 	return newModel;
 }
+
+std::istringstream FileManager::CleanFaceData(std::string line)
+{
+	std::istringstream newStream;
+	std::string finishedString;
+	std::vector<std::string> splitLine = SplitString(line, ' ');
+	for (UINT i = 0 ; i < splitLine.size() ; i++)
+	{
+		std::vector<std::string> splitFaces = SplitString(splitLine[i], '/');
+		finishedString.append(splitFaces[0]);
+		finishedString.append(" ");
+	}
+	newStream.str(finishedString);
+	return newStream;
+}
+
+std::vector<std::string> FileManager::SplitString(std::string line, char delim)
+	{
+		char curChar;
+		std::vector<std::string> stringVector;
+		std::string curString;
+		for (UINT i = 0 ; i < line.size() ; i++)
+		{
+			curChar = line[i];
+			if (curChar == delim)
+			{
+				stringVector.push_back(curString);
+				curString = "";
+			}
+			else
+			{
+				curString.push_back(curChar);
+			}
+		}
+		stringVector.push_back(curString);
+		return stringVector;
+	}
 
 ModelData FileManager::ConstructModelData(	std::vector<XMFLOAT3> verts,
 											std::vector<XMFLOAT3> normals,

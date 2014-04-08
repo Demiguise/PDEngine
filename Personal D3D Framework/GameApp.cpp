@@ -15,8 +15,9 @@ GameApp::GameApp(HINSTANCE hInstance)
 	mGameWindow = new GameWindow(this, hInstance, mClientHeight, mClientWidth);
 	mRenderer = new D3DRenderer(hInstance, mGameWindow->GetMainWHandle(), mClientHeight, mClientWidth);
 	mFileManager = new FileManager;
+	mEventManager = new EventManager;
 	mSceneManager = new SceneManager(mFileManager, mRenderer);
-	Camera mCamera = Camera(XMFLOAT3(10.0f, 10.0f, -10.0f));
+	Camera mCamera = Camera(XMFLOAT3(100.0f, 100.0f, -100.0f));
 	mSceneManager->SetActiveCamera(mCamera);
 	
 	mSceneManager->CreateEntity("Box0", "Models/Box.obj");
