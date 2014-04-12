@@ -247,7 +247,7 @@ void D3DRenderer::DrawScene()
 	UINT offset = 0;
 	for(UINT p = 0 ; p < techDesc.Passes ; ++p)
 	{
-		for (UINT i = 0 ; i < sceneData.size() ; i++)
+		for (UINT i = 0 ; i < sceneData.size() ; ++i)
 		{
 			mDeviceContext->IASetVertexBuffers(0, 1, &sceneData[i].bufferContents.vertexBuffer, &stride, &offset);
 			mDeviceContext->IASetIndexBuffer(sceneData[i].bufferContents.indexBuffer , DXGI_FORMAT_R32_UINT, 0);

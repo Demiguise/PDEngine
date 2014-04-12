@@ -6,6 +6,8 @@
 #include <deque>
 #include <map>
 #include <string>
+#include <queue>
+
 
 struct Vertex
 {
@@ -25,3 +27,7 @@ struct ModelData
 	std::vector<Vertex> vData;
 	std::vector<UINT> iData;
 };
+
+namespace Util
+{
+}

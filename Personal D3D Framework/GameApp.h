@@ -4,7 +4,7 @@
 #include "D3DRenderer.h"
 #include "SceneManager.h"
 #include "FileManager.h"
-#include "EventManager.h"
+#include "IEventManager.h"
 
 class GameWindow;
 
@@ -24,6 +24,6 @@ public:
 	GameWindow* mGameWindow;
 	Renderer* mRenderer;
 	SceneManager* mSceneManager;
-	EventManager* mEventManager;
+	IEventManager* mEventManager;
 };
 

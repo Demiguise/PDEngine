@@ -15,7 +15,7 @@ GameApp::GameApp(HINSTANCE hInstance)
 	mGameWindow = new GameWindow(this, hInstance, mClientHeight, mClientWidth);
 	mRenderer = new D3DRenderer(hInstance, mGameWindow->GetMainWHandle(), mClientHeight, mClientWidth);
 	mFileManager = new FileManager;
-	mEventManager = new EventManager;
+	mEventManager = IEventManager::getInstance();
 	mSceneManager = new SceneManager(mFileManager, mRenderer);
 	Camera mCamera = Camera(XMFLOAT3(100.0f, 100.0f, -100.0f));
 	mSceneManager->SetActiveCamera(mCamera);
@@ -26,6 +26,12 @@ GameApp::GameApp(HINSTANCE hInstance)
 	//mSceneManager->CreateEntity("Nyx0", "Models/Nyx.obj");
 	//mSceneManager->CreateEntity("Nyx1", "Models/Nyx.obj");
 	//mSceneManager->CreateEntity("Nyx2", "Models/Nyx.obj");
+	
+	//Firing test event
+	IEvent* newE = new IEvent("TestEvent");
+	int f = 4;
+	newE->eData = &f;
+	mEventManager->QueueEvent(newE);
 }
 
 GameApp::~GameApp(void)
@@ -64,6 +70,7 @@ int GameApp::Run(void)
 		}
 		else
 		{
+			mEventManager->Update();
 			XMMATRIX camViewMatrix = mSceneManager->activeCamera.GetViewMatrix();
 			mRenderer->UpdateScene(&camViewMatrix);
 			mRenderer->DrawScene();

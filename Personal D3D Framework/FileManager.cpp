@@ -71,7 +71,7 @@ std::istringstream FileManager::CleanFaceData(std::string line)
 	std::istringstream newStream;
 	std::string finishedString;
 	std::vector<std::string> splitLine = SplitString(line, ' ');
-	for (UINT i = 0 ; i < splitLine.size() ; i++)
+	for (UINT i = 0 ; i < splitLine.size() ; ++i)
 	{
 		std::vector<std::string> splitFaces = SplitString(splitLine[i], '/');
 		finishedString.append(splitFaces[0]);
@@ -86,7 +86,7 @@ std::vector<std::string> FileManager::SplitString(std::string line, char delim)
 		char curChar;
 		std::vector<std::string> stringVector;
 		std::string curString;
-		for (UINT i = 0 ; i < line.size() ; i++)
+		for (UINT i = 0 ; i < line.size() ; ++i)
 		{
 			curChar = line[i];
 			if (curChar == delim)
@@ -109,7 +109,7 @@ ModelData FileManager::ConstructModelData(	std::vector<XMFLOAT3> verts,
 											std::vector<UINT> faces)
 {
 	ModelData newMesh;
-	for (UINT i = 0 ; i < verts.size() ; i++)
+	for (UINT i = 0 ; i < verts.size() ; ++i)
 	{
 		newMesh.vData.push_back(Vertex(verts[i], normals[i], texCoords[i]));
 	}

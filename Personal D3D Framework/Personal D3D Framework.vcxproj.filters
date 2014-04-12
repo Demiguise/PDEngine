@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Rendering\OpenGL">
       <UniqueIdentifier>{2ccfe1eb-fc24-4a09-a9da-edff721b9bb1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Events">
+      <UniqueIdentifier>{ff3f39ee-52e8-45a4-b857-97c79fae3d39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Events">
+      <UniqueIdentifier>{c41d1443-1146-4182-ac70-171e2db2a287}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWindow.h">
@@ -78,8 +84,11 @@
     <ClInclude Include="D3DCommon.h">
       <Filter>Header Files\Rendering\DX11</Filter>
     </ClInclude>
-    <ClInclude Include="EventManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="IEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="IEventManager.h">
+      <Filter>Header Files\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -119,8 +128,11 @@
     <ClCompile Include="D3DBufferManager.cpp">
       <Filter>Source Files\Rendering\DX11</Filter>
     </ClCompile>
-    <ClCompile Include="EventManager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="IEvent.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="IEventManager.cpp">
+      <Filter>Source Files\Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -40,7 +40,7 @@ void SceneManager::DestroyEntity(UINT EntityUID)
 UINT SceneManager::GenerateUID()
 {
 	UINT newID = 0;
-	for (UINT i = 0 ; i < availableEntities.size() ; i++)
+	for (UINT i = 0 ; i < availableEntities.size() ; ++i)
 	{
 		if (availableEntities[i].uID >= newID)
 		{
@@ -53,7 +53,7 @@ UINT SceneManager::GenerateUID()
 std::vector<Entity> SceneManager::FindSceneObjects()
 {
 	std::vector<Entity> renderableObjects;
-	for (UINT i = 0 ; i < availableEntities.size() ; i++)
+	for (UINT i = 0 ; i < availableEntities.size() ; ++i)
 	{
 		if(availableEntities[i].renderable)
 		{

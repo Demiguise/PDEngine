@@ -6,6 +6,9 @@ Entity::Entity(UINT ID)
 {
 	renderable = true;
 	position = XMFLOAT3(0,0,0);
+	//Testing events.
+	IEventManager* eManager = IEventManager::getInstance();
+	eManager->AddListener("TestEvent", this);
 }
 
 
@@ -25,4 +28,14 @@ void Entity::InitMeshData(ModelData* newMesh)
 void Entity::Update(float dt)
 {
 	
+}
+
+bool Entity::OnEvent(IEvent* e)
+{
+	if (e->eType == "TestEvent")
+	{
+		OutputDebugString(L"Consuming Test Event!\n");
+		return true;
+	}
+	return false;
 }
