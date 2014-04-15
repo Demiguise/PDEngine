@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <windowsx.h>
 #include "GameApp.h"
+#include "Input.h"
 
 class GameApp;
 
@@ -20,6 +21,7 @@ public:
 protected:
 	HWND mHWnd;
 	HINSTANCE mHInstance;
+	CInput* mInput;
 
 private:
 	void Init();

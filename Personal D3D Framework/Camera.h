@@ -1,20 +1,24 @@
 #pragma once
+#include "Entity.h"
 #include "Common.h"
+#include "IEvent.h"
+#include "IEventManager.h"
 
-class Camera
+class Camera :
+	public Entity
 {
 public:
-	Camera(XMFLOAT3 initPos, XMFLOAT3 initRot);
-	Camera(XMFLOAT3 initPos);
-	Camera();
-	~Camera(void);
+	Camera(UINT uID, XMFLOAT3 initPos, XMFLOAT3 initRot);
+	Camera(UINT uID, XMFLOAT3 initPos);
+	Camera(UINT uID);
+	~Camera();
 	void SetPosition(XMFLOAT3 newPos);
 	void SetRotation(XMFLOAT3 newRot);
 	XMMATRIX GetViewMatrix();
+	bool OnEvent(IEvent* e);
 
 private:
-	XMFLOAT3 position;
-	XMFLOAT3 rotation;
-
+	void AddListeners();
+	void RemoveListener(std::string eventType);
 };
 

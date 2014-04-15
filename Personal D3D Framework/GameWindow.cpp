@@ -31,14 +31,11 @@ LRESULT GameWindow::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 			mWMaximized = true;
 			mWMinimized = false;
 		}
-	case WM_LBUTTONDOWN:
-	case WM_RBUTTONDOWN:
-		mGApp->OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-	case WM_LBUTTONUP:
-	case WM_RBUTTONUP:
-		mGApp->OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-	case WM_MOUSEMOVE:
-		mGApp->OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		break;
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+		mInput->Update(msg, wParam, lParam);
+		break;
 	}
 	return DefWindowProc(mHWnd, msg, wParam, lParam);
 }
@@ -112,6 +109,7 @@ void GameWindow::Init()
 		return;
 	}
 
+	mInput = CInput::GetInstance();
 	ShowWindow(mHWnd, SW_SHOW);
 	UpdateWindow(mHWnd);
 }

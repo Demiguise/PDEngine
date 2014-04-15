@@ -17,8 +17,8 @@ public: //Functions
 	void UpdateScene(XMMATRIX* viewMatrix);
 	void DrawScene();
 	void OnResize(UINT newHeight, UINT newWidth);
-	void CreateBuffer(Entity* newEnt);
-	void DestroyBuffer(Entity* entity);
+	void CreateBuffer(CRenderableObject* newEnt);
+	void DestroyBuffer(CRenderableObject* entity);
 
 private:
 	bool InitDirect3D();

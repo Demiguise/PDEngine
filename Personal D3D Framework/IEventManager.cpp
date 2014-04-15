@@ -3,7 +3,7 @@
 typedef std::map<std::string, std::vector<Entity*>>::iterator listenerIT;
 IEventManager* IEventManager::m_pInstance = 0;
 
-IEventManager* IEventManager::getInstance()
+IEventManager* IEventManager::GetInstance()
 {
 	if (!m_pInstance)
 	{
@@ -47,10 +47,15 @@ void IEventManager::RemoveListener(std::string eventType, Entity* regEntity)
 		{
 			if (lisIT->second[i] == regEntity)
 			{
-				lisIT->second.erase(lisIT->second.begin() + (i - 1));
+				lisIT->second.erase(lisIT->second.begin() + i);
 			}
 		}
 	}
+}
+
+void IEventManager::RemoveAllListenersFromEnt(Entity* regEntity)
+{
+	//
 }
 
 void IEventManager::QueueEvent(IEvent* newEvent)
@@ -80,7 +85,7 @@ void IEventManager::Update()
 		else
 		{
 			//No-one is listening for that event.
-			OutputDebugString(L"No Listeners found for event");
+			OutputDebugString(L"No Listeners found for event. \n");
 		}
 		delete mainEventQueue.front();
 		mainEventQueue.pop();

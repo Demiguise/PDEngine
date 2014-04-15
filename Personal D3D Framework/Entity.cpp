@@ -1,27 +1,35 @@
 #include "Entity.h"
 
+Entity::Entity(UINT ID, XMFLOAT3 initPos, XMFLOAT3 initRot)
+{
+	uID = ID;
+	position = initPos;
+	rotation = initRot;
+}
+
+Entity::Entity(UINT ID, XMFLOAT3 initPos)
+{
+	uID = ID;
+	position = initPos;
+	rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+}
 
 Entity::Entity(UINT ID)
-	: uID(ID)
 {
-	renderable = true;
+	uID = ID;
 	position = XMFLOAT3(0,0,0);
+	rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	//Testing events.
-	IEventManager* eManager = IEventManager::getInstance();
+	IEventManager* eManager = IEventManager::GetInstance();
 	eManager->AddListener("TestEvent", this);
 }
 
-
 Entity::~Entity(void)
 {
-
+	IEventManager* eventMan = IEventManager::GetInstance();
+	eventMan->RemoveAllListenersFromEnt(this);
 }
 
-void Entity::InitMeshData(ModelData* newMesh)
-{
-	mesh.vData = newMesh->vData;
-	mesh.iData = newMesh->iData;
-}
 
 //Runtime
 

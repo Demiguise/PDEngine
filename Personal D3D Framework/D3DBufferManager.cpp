@@ -12,7 +12,7 @@ D3DBufferManager::~D3DBufferManager()
 
 }
 
-void D3DBufferManager::InitNewBuffer(Entity* newEntity)
+void D3DBufferManager::InitNewBuffer(CRenderableObject* newEntity)
 {
 	bufferData newBuffers;
 	//Create new Vertex Buffer
@@ -40,10 +40,10 @@ void D3DBufferManager::InitNewBuffer(Entity* newEntity)
 	md3dDevice->CreateBuffer(&ibd, &ibData, &newBuffers.indexBuffer);
 	
 	newBuffers.iCount = newEntity->mesh.iData.size();
-	bufferMap.insert(std::pair<Entity*, bufferData>(newEntity, newBuffers));
+	bufferMap.insert(std::pair<CRenderableObject*, bufferData>(newEntity, newBuffers));
 }
 
-void D3DBufferManager::DestroyBuffer(Entity* entityToDestroy)
+void D3DBufferManager::DestroyBuffer(CRenderableObject* entityToDestroy)
 {
 
 }
@@ -51,7 +51,7 @@ void D3DBufferManager::DestroyBuffer(Entity* entityToDestroy)
 std::vector<packedBufferData> D3DBufferManager::GrabSceneBuffers()
 {
 	std::vector<packedBufferData> sceneData;
-	std::map<Entity*, bufferData>::iterator bdIT;
+	std::map<CRenderableObject*, bufferData>::iterator bdIT;
 	for (bdIT = bufferMap.begin() ; bdIT != bufferMap.end() ; ++bdIT)
 	{
 		packedBufferData newData;

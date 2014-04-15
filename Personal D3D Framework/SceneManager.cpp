@@ -1,9 +1,8 @@
 #include "SceneManager.h"
 
-SceneManager::SceneManager(FileManager* fileManager, Renderer* renderer)
+SceneManager::SceneManager(FileManager* fileManager)
 {
 	mFileManager = fileManager;
-	mRenderer = renderer;
 }
 
 
@@ -12,68 +11,37 @@ SceneManager::~SceneManager()
 
 }
 
-Entity* SceneManager::CreateEntity(LPCSTR EntityName, LPCSTR meshFileName)
+void SceneManager::RegisterEntity(Entity* entity)
 {
-	availableEntities.push_back(Entity(GenerateUID()));
-	Entity* newEntity = &availableEntities.back();
-	ModelData newMesh;
-	std::map<LPCSTR, ModelData>::iterator it = MeshReference.find(meshFileName);
-	if (it != MeshReference.end())
-	{
-		newMesh = MeshReference[meshFileName];
-	}
-	else
-	{
-		newMesh = mFileManager->LoadModelData(meshFileName);
-		MeshReference.insert(std::pair<LPCSTR, ModelData>(meshFileName, newMesh));
-	}
-	newEntity->InitMeshData(&newMesh);
-	mRenderer->CreateBuffer(newEntity);
-	return newEntity;
+	availableEntities.push_back(entity);
 }
 
-void SceneManager::DestroyEntity(UINT EntityUID)
+void SceneManager::RemoveEntity(Entity* entity)
 {
-	
+	for (UINT i = 0 ; i < availableEntities.size() ; ++i)
+	{
+		if (availableEntities[i] == entity)
+		{
+			availableEntities.erase(availableEntities.begin() + i);
+		}
+	}
 }
+
 
 UINT SceneManager::GenerateUID()
 {
 	UINT newID = 0;
 	for (UINT i = 0 ; i < availableEntities.size() ; ++i)
 	{
-		if (availableEntities[i].uID >= newID)
+		if (availableEntities[i]->uID >= newID)
 		{
-			newID = availableEntities[i].uID + 1;
+			newID = availableEntities[i]->uID + 1;
 		}
 	}
 	return newID;
 }
 
-std::vector<Entity> SceneManager::FindSceneObjects()
-{
-	std::vector<Entity> renderableObjects;
-	for (UINT i = 0 ; i < availableEntities.size() ; ++i)
-	{
-		if(availableEntities[i].renderable)
-		{
-			renderableObjects.push_back(availableEntities[i]);
-	
-		}
-	}
-	if (prevSceneEntityCount != availableEntities.size())
-	{
-		sceneChangeThisFrame = true;
-		prevSceneEntityCount = availableEntities.size();
-	}
-	else
-	{
-		sceneChangeThisFrame = false;
-	}
-	return renderableObjects;
-}
-
-void SceneManager::SetActiveCamera(Camera newCam)
+void SceneManager::SetActiveCamera(Camera* newCam)
 {
 	activeCamera = newCam;
 }

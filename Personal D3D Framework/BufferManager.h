@@ -1,12 +1,12 @@
 #pragma once
-#include "Entity.h"
+#include "RenderableObject.h"
 
 class BufferManager
 {
 public:
 	BufferManager(void);
 	~BufferManager(void);
-	virtual void InitNewBuffer(Entity* newEntity) = 0;
-	virtual void DestroyBuffer (Entity* entityToDestroy) = 0;
+	virtual void InitNewBuffer(CRenderableObject* newEntity) = 0;
+	virtual void DestroyBuffer (CRenderableObject* entityToDestroy) = 0;
 };
 

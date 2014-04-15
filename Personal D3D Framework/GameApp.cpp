@@ -13,51 +13,41 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 GameApp::GameApp(HINSTANCE hInstance)
 {
 	mGameWindow = new GameWindow(this, hInstance, mClientHeight, mClientWidth);
-	mRenderer = new D3DRenderer(hInstance, mGameWindow->GetMainWHandle(), mClientHeight, mClientWidth);
+	mRenderer = new D3DRenderer(hInstance, mGameWindow->GetMainWHandle(),
+											mClientHeight, mClientWidth);
 	mFileManager = new FileManager;
-	mEventManager = IEventManager::getInstance();
-	mSceneManager = new SceneManager(mFileManager, mRenderer);
-	Camera mCamera = Camera(XMFLOAT3(100.0f, 100.0f, -100.0f));
+	mEventManager = IEventManager::GetInstance();
+	mSceneManager = new SceneManager(mFileManager);
+	mCamera = new Camera(mSceneManager->GenerateUID(),
+					XMFLOAT3(100.0f, 100.0f, -100.0f));
+	mSceneManager->RegisterEntity(mCamera);
 	mSceneManager->SetActiveCamera(mCamera);
-	
-	mSceneManager->CreateEntity("Box0", "Models/Box.obj");
-	mSceneManager->CreateEntity("Box1", "Models/Box.obj");
-	mSceneManager->availableEntities[0].position = XMFLOAT3(1.5f, 0.0f, 1.5f);
-	//mSceneManager->CreateEntity("Nyx0", "Models/Nyx.obj");
-	//mSceneManager->CreateEntity("Nyx1", "Models/Nyx.obj");
-	//mSceneManager->CreateEntity("Nyx2", "Models/Nyx.obj");
+	CreateTestObjects();
 	
 	//Firing test event
-	IEvent* newE = new IEvent("TestEvent");
+	IEvent* newE = new IEvent();
+	newE->eType = "TestEvent";
 	int f = 4;
 	newE->eData = &f;
 	mEventManager->QueueEvent(newE);
 }
 
-GameApp::~GameApp(void)
+void GameApp::CreateTestObjects()
 {
-	
+	CRenderableObject* nObj = new CRenderableObject(mSceneManager->GenerateUID(),
+									mFileManager->LoadModelData("Models/Box.obj"),
+													XMFLOAT3(0.0f, 0.0f, 0.0f));
+	mRenderer->CreateBuffer(nObj);
+	mSceneManager->RegisterEntity(nObj);
 }
 
-void GameApp::OnWindowChange(UINT msg, WPARAM wParam, LPARAM lParam)
+GameApp::~GameApp()
 {
-
+	delete mCamera;
+	mSceneManager->RemoveEntity(mCamera);
 }
 
-void GameApp::OnMouseDown(WPARAM btnState, int x, int y)
-{
-
-}
-void GameApp::OnMouseUp(WPARAM btnState, int x, int y)
-{
-
-}
-void GameApp::OnMouseMove(WPARAM btnState, int x, int y)
-{
-	
-}
-
-int GameApp::Run(void)
+int GameApp::Run()
 {
 	MSG msg = {0};
 
@@ -71,7 +61,7 @@ int GameApp::Run(void)
 		else
 		{
 			mEventManager->Update();
-			XMMATRIX camViewMatrix = mSceneManager->activeCamera.GetViewMatrix();
+			XMMATRIX camViewMatrix = mSceneManager->activeCamera->GetViewMatrix();
 			mRenderer->UpdateScene(&camViewMatrix);
 			mRenderer->DrawScene();
 		}

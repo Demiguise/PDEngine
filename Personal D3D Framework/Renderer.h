@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "RenderableObject.h"
 #include "Common.h"
 #include "BufferManager.h"
 
@@ -16,8 +16,8 @@ public:
 	virtual void UpdateScene(XMMATRIX* viewMatrix) = 0;
 	virtual void DrawScene() = 0;
 	virtual void OnResize(UINT newHeight, UINT newWidth) = 0;
-	virtual void CreateBuffer(Entity* newEnt) = 0;
-	virtual void DestroyBuffer(Entity* entity) = 0;
+	virtual void CreateBuffer(CRenderableObject* newEnt) = 0;
+	virtual void DestroyBuffer(CRenderableObject* entity) = 0;
 	std::string rendererName;
 };
 

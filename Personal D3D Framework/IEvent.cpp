@@ -1,9 +1,7 @@
 #include "IEvent.h"
 
-
-IEvent::IEvent(std::string initType)
+IEvent::IEvent()
 {
-	eType = initType;
 }
 
 

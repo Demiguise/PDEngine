@@ -87,7 +87,9 @@
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameApp.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="OpenGLRenderer.h" />
+    <ClInclude Include="RenderableObject.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="GameWindow.h" />
@@ -102,7 +104,9 @@
     <ClCompile Include="IEventManager.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="OpenGLRenderer.cpp" />
+    <ClCompile Include="RenderableObject.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Main.cpp" />

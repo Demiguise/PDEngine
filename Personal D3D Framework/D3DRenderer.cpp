@@ -262,12 +262,12 @@ void D3DRenderer::DrawScene()
 	mSwapChain->Present(0,0);
 }
 
-void D3DRenderer::CreateBuffer(Entity* newEnt)
+void D3DRenderer::CreateBuffer(CRenderableObject* newEnt)
 {
 	mBufferManager->InitNewBuffer(newEnt);
 }
 
-void D3DRenderer::DestroyBuffer(Entity* entity)
+void D3DRenderer::DestroyBuffer(CRenderableObject* entity)
 {
 
 }

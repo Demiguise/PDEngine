@@ -4,7 +4,7 @@
 class IEvent
 {
 public:
-	IEvent(std::string initType);
+	IEvent();
 	~IEvent();
 	void* eData;
 	std::string eType;

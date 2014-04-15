@@ -5,15 +5,17 @@
 
 //Singleton Design Pattern
 class Entity;
+class IEvent;
 
 class IEventManager
 {
 public:
-	static IEventManager* getInstance();
+	static IEventManager* GetInstance();
 
 	~IEventManager();
 	void AddListener(std::string eventType, Entity* regEntity);
 	void RemoveListener(std::string eventType, Entity* regEntity);
+	void RemoveAllListenersFromEnt(Entity* regEntity);
 	void QueueEvent(IEvent* newEvent);
 	void Update();
 private:
