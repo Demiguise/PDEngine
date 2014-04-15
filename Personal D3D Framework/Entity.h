@@ -13,8 +13,8 @@ public:
 	Entity(UINT uID, XMFLOAT3 initPos);
 	Entity(UINT ID);
 	~Entity(void);
-	void Update(float dt);
-	bool OnEvent(IEvent* e);
+	virtual void Update(float dt);
+	virtual bool OnEvent(IEvent* e);
 
 	UINT uID;
 	XMFLOAT3 position;
