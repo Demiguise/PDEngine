@@ -20,9 +20,9 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 		return ModelData();
 	}
 	std::string line;
-	std::vector<XMFLOAT3> lVertices;
-	std::vector<XMFLOAT3> lNormals;
-	std::vector<XMFLOAT2> lTexCoords;
+	std::vector<EnVector3> lVertices;
+	std::vector<EnVector3> lNormals;
+	std::vector<EnVector2> lTexCoords;
 	std::vector<UINT> lFaces;
 	OutputDebugString(L"Loading data from file.\n");
 	while (std::getline(ifs, line))
@@ -30,21 +30,21 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 		if(line.substr(0, 2) == "v ")
 		{
 			std::istringstream iss(line.substr(2));
-			XMFLOAT3 nV;
+			EnVector3 nV;
 			iss >> nV.x; iss >> nV.y; iss >> nV.z;
 			lVertices.push_back(nV);
 		}
 		else if (line.substr(0, 2) == "vt")
 		{
 			std::istringstream iss(line.substr(3));
-			XMFLOAT2 nVT;
+			EnVector2 nVT;
 			iss >> nVT.x; iss >> nVT.y;
 			lTexCoords.push_back(nVT);
 		}
 		else if (line.substr(0, 2) == "vn")
 		{
 			std::istringstream iss(line.substr(3));
-			XMFLOAT3 nVN;
+			EnVector3 nVN;
 			iss >> nVN.x; iss >> nVN.y; iss >> nVN.z;
 			lNormals.push_back(nVN);
 		}
@@ -103,9 +103,9 @@ std::vector<std::string> FileManager::SplitString(std::string line, char delim)
 		return stringVector;
 	}
 
-ModelData FileManager::ConstructModelData(	std::vector<XMFLOAT3> verts,
-											std::vector<XMFLOAT3> normals,
-											std::vector<XMFLOAT2> texCoords,
+ModelData FileManager::ConstructModelData(	std::vector<EnVector3> verts,
+											std::vector<EnVector3> normals,
+											std::vector<EnVector2> texCoords,
 											std::vector<UINT> faces)
 {
 	ModelData newMesh;

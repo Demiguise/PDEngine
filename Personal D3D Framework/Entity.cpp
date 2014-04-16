@@ -1,24 +1,24 @@
 #include "Entity.h"
 
-Entity::Entity(UINT ID, XMFLOAT3 initPos, XMFLOAT3 initRot)
+Entity::Entity(UINT ID, EnVector3 initPos, EnVector3 initRot)
 {
 	uID = ID;
 	position = initPos;
 	rotation = initRot;
 }
 
-Entity::Entity(UINT ID, XMFLOAT3 initPos)
+Entity::Entity(UINT ID, EnVector3 initPos)
 {
 	uID = ID;
 	position = initPos;
-	rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	rotation = EnVector3(0.0f, 0.0f, 0.0f);
 }
 
 Entity::Entity(UINT ID)
 {
 	uID = ID;
-	position = XMFLOAT3(0,0,0);
-	rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	position = EnVector3(0,0,0);
+	rotation = EnVector3(0.0f, 0.0f, 0.0f);
 	//Testing events.
 	IEventManager* eManager = IEventManager::GetInstance();
 	eManager->AddListener("TestEvent", this);
@@ -30,10 +30,9 @@ Entity::~Entity(void)
 	eventMan->RemoveAllListenersFromEnt(this);
 }
 
-
 //Runtime
 
-void Entity::Update(float dt)
+void Entity::Update()
 {
 	
 }
@@ -46,4 +45,9 @@ bool Entity::OnEvent(IEvent* e)
 		return true;
 	}
 	return false;
+}
+
+void Entity::AddForce(EnVector3 direction, int power)
+{
+	
 }

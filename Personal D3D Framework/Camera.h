@@ -8,18 +8,18 @@ class Camera :
 	public Entity
 {
 public:
-	Camera(UINT uID, XMFLOAT3 initPos, XMFLOAT3 initRot);
-	Camera(UINT uID, XMFLOAT3 initPos);
+	Camera(UINT uID, EnVector3 initPos, EnVector3 initRot);
+	Camera(UINT uID, EnVector3 initPos);
 	Camera(UINT uID);
 	~Camera();
-	void SetPosition(XMFLOAT3 newPos);
-	void SetRotation(XMFLOAT3 newRot);
+	void SetPosition(EnVector3 newPos);
+	void SetRotation(EnVector3 newRot);
 	XMMATRIX GetViewMatrix();
 	bool OnEvent(IEvent* e);
 
 private:
 	void AddListeners();
 	void RemoveListener(std::string eventType);
-	void GhettoMove(XMFLOAT3 direction);
+	void GhettoMove(EnVector3 direction);
 };
 

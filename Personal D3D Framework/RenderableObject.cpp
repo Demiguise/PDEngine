@@ -1,7 +1,7 @@
 #include "RenderableObject.h"
 
 
-CRenderableObject::CRenderableObject(UINT uID, ModelData newMesh, XMFLOAT3 initPos, XMFLOAT3 initRot) 
+CRenderableObject::CRenderableObject(UINT uID, ModelData newMesh, EnVector3 initPos, EnVector3 initRot) 
 	: Entity (uID, initPos, initRot)
 {
 	mesh = newMesh;
@@ -9,20 +9,20 @@ CRenderableObject::CRenderableObject(UINT uID, ModelData newMesh, XMFLOAT3 initP
 	rotation = initRot;
 }
 
-CRenderableObject::CRenderableObject(UINT uID, ModelData newMesh, XMFLOAT3 initPos) 
+CRenderableObject::CRenderableObject(UINT uID, ModelData newMesh, EnVector3 initPos) 
 	: Entity (uID, initPos)
 {
 	mesh = newMesh;
 	position = initPos;
-	rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	rotation = EnVector3(0.0f, 0.0f, 0.0f);
 }
 
 CRenderableObject::CRenderableObject(UINT uID, ModelData newMesh) 
 	: Entity (uID)
 {
 	mesh = newMesh;
-	position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	position = EnVector3(0.0f, 0.0f, 0.0f);
+	rotation = EnVector3(0.0f, 0.0f, 0.0f);
 }
 
 CRenderableObject::~CRenderableObject()

@@ -19,7 +19,8 @@ GameApp::GameApp(HINSTANCE hInstance)
 	mEventManager = IEventManager::GetInstance();
 	mSceneManager = new SceneManager(mFileManager);
 	mCamera = new Camera(mSceneManager->GenerateUID(),
-					XMFLOAT3(10.0f, 10.0f, -10.0f));
+					EnVector3(100.0f, 100.0f, -100.0f));
+	mPhysicsManager = new PhysicsManager();
 	mSceneManager->RegisterEntity(mCamera);
 	mSceneManager->SetActiveCamera(mCamera);
 	CreateTestObjects();
@@ -36,7 +37,7 @@ void GameApp::CreateTestObjects()
 {
 	CRenderableObject* nObj = new CRenderableObject(mSceneManager->GenerateUID(),
 									mFileManager->LoadModelData("Models/Box.obj"),
-													XMFLOAT3(0.0f, 0.0f, 0.0f));
+													EnVector3(0.0f, 0.0f, 0.0f));
 	mRenderer->CreateBuffer(nObj);
 	mSceneManager->RegisterEntity(nObj);
 }
@@ -60,6 +61,7 @@ int GameApp::Run()
 		}
 		else
 		{
+			mPhysicsManager->Update();
 			mEventManager->Update();
 			XMMATRIX camViewMatrix = mSceneManager->activeCamera->GetViewMatrix();
 			mRenderer->UpdateScene(&camViewMatrix);

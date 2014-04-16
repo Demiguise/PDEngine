@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(UINT uID, XMFLOAT3 initPos, XMFLOAT3 initRot) 
+Camera::Camera(UINT uID, EnVector3 initPos, EnVector3 initRot) 
 	: Entity (uID, initPos, initRot)
 {
 	position = initPos;
@@ -8,19 +8,19 @@ Camera::Camera(UINT uID, XMFLOAT3 initPos, XMFLOAT3 initRot)
 	AddListeners();
 }
 
-Camera::Camera(UINT uID, XMFLOAT3 initPos) 
+Camera::Camera(UINT uID, EnVector3 initPos) 
 	: Entity (uID, initPos)
 {
 	position = initPos;
-	rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	rotation = EnVector3(0.0f, 0.0f, 0.0f);
 	AddListeners();
 }
 
 Camera::Camera(UINT uID) 
 	: Entity (uID)
 {
-	position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	position = EnVector3(0.0f, 0.0f, 0.0f);
+	rotation = EnVector3(0.0f, 0.0f, 0.0f);
 	AddListeners();
 }
 
@@ -43,12 +43,12 @@ void Camera::RemoveListener(std::string eventType)
 	eventMan->RemoveListener(eventType, this);
 }
 
-void Camera::SetPosition(XMFLOAT3 newPos)
+void Camera::SetPosition(EnVector3 newPos)
 {
 	position = newPos;
 }
 
-void Camera::SetRotation(XMFLOAT3 newRot)
+void Camera::SetRotation(EnVector3 newRot)
 {
 	rotation = newRot;
 }
@@ -68,16 +68,16 @@ bool Camera::OnEvent(IEvent* e)
 		switch (*keyPress)
 		{
 		case GameKey::W:
-			GhettoMove(XMFLOAT3(1.0f, 0.0f, 0.0f));
+			GhettoMove(EnVector3(1.0f, 0.0f, 0.0f));
 			break;
 		case GameKey::A:
-			GhettoMove(XMFLOAT3(0.0f, 1.0f, 0.0f));
+			GhettoMove(EnVector3(0.0f, 1.0f, 0.0f));
 			break;
 		case GameKey::S:
-			GhettoMove(XMFLOAT3(-1.0f, 0.0f, 0.0f));
+			GhettoMove(EnVector3(-1.0f, 0.0f, 0.0f));
 			break;
 		case GameKey::D:
-			GhettoMove(XMFLOAT3(0.0f, -1.0f, 0.0f));
+			GhettoMove(EnVector3(0.0f, -1.0f, 0.0f));
 			break;
 		}
 		return true;
@@ -85,9 +85,9 @@ bool Camera::OnEvent(IEvent* e)
 	return false;
 }
 
-void Camera::GhettoMove(XMFLOAT3 direction)
+void Camera::GhettoMove(EnVector3 direction)
 {
-	XMFLOAT3 newPosition;
+	EnVector3 newPosition;
 	newPosition.x = position.x + direction.x;
 	newPosition.y = position.y + direction.y;
 	newPosition.z = position.z + direction.z;

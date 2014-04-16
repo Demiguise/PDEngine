@@ -13,9 +13,9 @@ public:
 private:
 	std::istringstream CleanFaceData (std::string line);
 	std::vector<std::string> SplitString(std::string line, char delim);
-	ModelData ConstructModelData(	std::vector<XMFLOAT3> verts,
-									std::vector<XMFLOAT3> normals,
-									std::vector<XMFLOAT2> texCoords,
+	ModelData ConstructModelData(	std::vector<EnVector3> verts,
+									std::vector<EnVector3> normals,
+									std::vector<EnVector2> texCoords,
 									std::vector<UINT> faces);
 };
 

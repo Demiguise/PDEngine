@@ -272,7 +272,7 @@ void D3DRenderer::DestroyBuffer(CRenderableObject* entity)
 
 }
 
-XMMATRIX D3DRenderer::BuildWVPMatrix(XMFLOAT3 wPos, XMMATRIX* view, XMMATRIX* proj)
+XMMATRIX D3DRenderer::BuildWVPMatrix(EnVector3 wPos, XMMATRIX* view, XMMATRIX* proj)
 {
 	XMMATRIX worldMatrix = XMMatrixTranslation(wPos.x, wPos.y, wPos.z);
 	XMMATRIX lView = *view;

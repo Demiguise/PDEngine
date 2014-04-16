@@ -25,7 +25,7 @@ private:
 	bool InitBuffers();
 	void CreateInputLayer();
 	void InitEffects();
-	XMMATRIX BuildWVPMatrix(XMFLOAT3 wPos, XMMATRIX* view, XMMATRIX* proj);
+	XMMATRIX BuildWVPMatrix(EnVector3 wPos, XMMATRIX* view, XMMATRIX* proj);
 
 
 	//DirectX COM Devices

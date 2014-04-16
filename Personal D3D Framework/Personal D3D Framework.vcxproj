@@ -89,8 +89,10 @@
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="OpenGLRenderer.h" />
+    <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="RenderableObject.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="Entity.h" />
@@ -98,6 +100,7 @@
   <ItemGroup>
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="D3DBufferManager.cpp" />
     <ClCompile Include="D3DRenderer.cpp" />
     <ClCompile Include="IEvent.cpp" />
@@ -106,8 +109,10 @@
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="OpenGLRenderer.cpp" />
+    <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="RenderableObject.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameWindow.cpp" />

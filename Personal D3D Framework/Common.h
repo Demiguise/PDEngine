@@ -1,6 +1,5 @@
 #pragma once
-#include <D3D11.h>
-#include <xnamath.h>
+#include <Windows.h>
 #include <vector>
 #include <list>
 #include <deque>
@@ -8,21 +7,40 @@
 #include <string>
 #include <queue>
 
+struct EnVector2
+{
+	EnVector2(){}
+	EnVector2(const float initX, const float initY)
+		: x(initX), y(initY){}
+	float x;
+	float y;
+};
+
+struct EnVector3
+{
+	EnVector3(){}
+	EnVector3(const float initX, const float initY, const float initZ)
+		: x(initX), y(initY), z(initZ){}
+	float x;
+	float y;
+	float z;
+};
 
 struct Vertex
 {
 	Vertex(){}
-	Vertex(const XMFLOAT3& p, const XMFLOAT3& n, const XMFLOAT2& tc)
+	Vertex(const EnVector3& p, const EnVector3& n, const EnVector2& tc)
 		: position(p), normal(n), texCoords(tc){}
-	XMFLOAT3 position;
-	XMFLOAT3 normal;
-	XMFLOAT2 texCoords;
+	EnVector3 position;
+	EnVector3 normal;
+	EnVector2 texCoords;
 };
 
 struct ModelData
 {
 	ModelData() {}
-	ModelData(std::vector<Vertex> iVData, std::vector<UINT> iIData) {}
+	ModelData(std::vector<Vertex> iVData, std::vector<UINT> iIData)
+		: vData(iVData), iData(iIData){}
 	LPCSTR semanticName;
 	std::vector<Vertex> vData;
 	std::vector<UINT> iData;
@@ -38,4 +56,5 @@ enum GameKey
 
 namespace Util
 {
+	
 }

@@ -1,10 +1,11 @@
 #pragma once
-#include <Windows.h>
+#include "Common.h"
 #include "GameWindow.h"
 #include "D3DRenderer.h"
 #include "SceneManager.h"
 #include "FileManager.h"
 #include "IEventManager.h"
+#include "PhysicsManager.h"
 #include "RenderableObject.h" //For test purposes, should probably remove once finished.
 
 class GameWindow;
@@ -22,6 +23,7 @@ public:
 	Renderer* mRenderer;
 	SceneManager* mSceneManager;
 	IEventManager* mEventManager;
+	PhysicsManager* mPhysicsManager;
 	Camera* mCamera;
 };
 
