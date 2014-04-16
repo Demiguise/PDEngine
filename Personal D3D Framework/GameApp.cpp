@@ -19,7 +19,7 @@ GameApp::GameApp(HINSTANCE hInstance)
 	mEventManager = IEventManager::GetInstance();
 	mSceneManager = new SceneManager(mFileManager);
 	mCamera = new Camera(mSceneManager->GenerateUID(),
-					XMFLOAT3(100.0f, 100.0f, -100.0f));
+					XMFLOAT3(10.0f, 10.0f, -10.0f));
 	mSceneManager->RegisterEntity(mCamera);
 	mSceneManager->SetActiveCamera(mCamera);
 	CreateTestObjects();
@@ -27,8 +27,8 @@ GameApp::GameApp(HINSTANCE hInstance)
 	//Firing test event
 	IEvent* newE = new IEvent();
 	newE->eType = "TestEvent";
-	int f = 4;
-	newE->eData = &f;
+	int* f = new int(4);
+	newE->eData = f;
 	mEventManager->QueueEvent(newE);
 }
 

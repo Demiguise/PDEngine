@@ -28,6 +28,14 @@ struct ModelData
 	std::vector<UINT> iData;
 };
 
+enum GameKey
+{
+	W,
+	A,
+	S,
+	D
+};
+
 namespace Util
 {
 }

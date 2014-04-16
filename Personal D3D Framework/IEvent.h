@@ -7,6 +7,7 @@ public:
 	IEvent();
 	~IEvent();
 	void* eData;
+	UINT pDataSize;
 	std::string eType;
 };
 

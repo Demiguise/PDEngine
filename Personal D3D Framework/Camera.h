@@ -20,5 +20,6 @@ public:
 private:
 	void AddListeners();
 	void RemoveListener(std::string eventType);
+	void GhettoMove(XMFLOAT3 direction);
 };
 

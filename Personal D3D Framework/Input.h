@@ -14,5 +14,6 @@ public:
 private:
 	CInput();
 	static CInput* m_pInstance;
+	GameKey* TranslateKeyPress(WPARAM wParam);
 };
 

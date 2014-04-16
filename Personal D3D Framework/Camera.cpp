@@ -64,7 +64,32 @@ bool Camera::OnEvent(IEvent* e)
 {
 	if (e->eType == "UserKeyPress")
 	{
-		OutputDebugString(L"Event Recieved");
+		GameKey* keyPress = static_cast<GameKey*>(e->eData);
+		switch (*keyPress)
+		{
+		case GameKey::W:
+			GhettoMove(XMFLOAT3(1.0f, 0.0f, 0.0f));
+			break;
+		case GameKey::A:
+			GhettoMove(XMFLOAT3(0.0f, 1.0f, 0.0f));
+			break;
+		case GameKey::S:
+			GhettoMove(XMFLOAT3(-1.0f, 0.0f, 0.0f));
+			break;
+		case GameKey::D:
+			GhettoMove(XMFLOAT3(0.0f, -1.0f, 0.0f));
+			break;
+		}
+		return true;
 	}
 	return false;
+}
+
+void Camera::GhettoMove(XMFLOAT3 direction)
+{
+	XMFLOAT3 newPosition;
+	newPosition.x = position.x + direction.x;
+	newPosition.y = position.y + direction.y;
+	newPosition.z = position.z + direction.z;
+	return SetPosition(newPosition);
 }
