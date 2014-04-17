@@ -14,7 +14,6 @@ public:
 	~Camera();
 	void SetPosition(EnVector3 newPos);
 	void SetRotation(EnVector3 newRot);
-	XMMATRIX GetViewMatrix();
 	bool OnEvent(IEvent* e);
 
 private:

@@ -1,6 +1,10 @@
 #pragma once
+#include "Common.h"
+#include <D3D11.h>
 #include <D3DX11.h>
 #include <xnamath.h>
+#include <d3dx11effect.h>
+#include <DxErr.h>
 
 struct bufferData
 {

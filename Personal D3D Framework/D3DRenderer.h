@@ -3,10 +3,7 @@
 #include "D3DBufferManager.h"
 #include "D3DCommon.h"
 #include "Entity.h"
-#include <D3DX11.h>
-#include <d3dx11effect.h>
 #include <Windows.h>
-#include <DxErr.h>
 
 class D3DRenderer : public Renderer
 {
@@ -14,7 +11,7 @@ public: //Functions
 	D3DRenderer (HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWidth);
 	~D3DRenderer();
 	bool Init();
-	void UpdateScene(XMMATRIX* viewMatrix);
+	void UpdateScene(const EnVector3 &camPos);
 	void DrawScene();
 	void OnResize(UINT newHeight, UINT newWidth);
 	void CreateBuffer(CRenderableObject* newEnt);
@@ -26,7 +23,6 @@ private:
 	void CreateInputLayer();
 	void InitEffects();
 	XMMATRIX BuildWVPMatrix(EnVector3 wPos, XMMATRIX* view, XMMATRIX* proj);
-
 
 	//DirectX COM Devices
 	ID3D11Device* md3dDevice;

@@ -24,13 +24,6 @@ GameApp::GameApp(HINSTANCE hInstance)
 	mSceneManager->RegisterEntity(mCamera);
 	mSceneManager->SetActiveCamera(mCamera);
 	CreateTestObjects();
-	
-	//Firing test event
-	IEvent* newE = new IEvent();
-	newE->eType = "TestEvent";
-	int* f = new int(4);
-	newE->eData = f;
-	mEventManager->QueueEvent(newE);
 }
 
 void GameApp::CreateTestObjects()
@@ -63,8 +56,7 @@ int GameApp::Run()
 		{
 			mPhysicsManager->Update();
 			mEventManager->Update();
-			XMMATRIX camViewMatrix = mSceneManager->activeCamera->GetViewMatrix();
-			mRenderer->UpdateScene(&camViewMatrix);
+			mRenderer->UpdateScene(mSceneManager->activeCamera->position);
 			mRenderer->DrawScene();
 		}
 	}

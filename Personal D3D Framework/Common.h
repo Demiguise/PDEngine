@@ -7,23 +7,33 @@
 #include <string>
 #include <queue>
 
-struct EnVector2
+class EnVector2
 {
-	EnVector2(){}
-	EnVector2(const float initX, const float initY)
-		: x(initX), y(initY){}
+public:
+	EnVector2();
+	EnVector2(const float& initX, const float& initY);
+	inline EnVector2 operator+ (const EnVector2& rhs);
+	EnVector2& operator+= (const EnVector2& rhs);
+	inline EnVector2 operator- (const EnVector2& rhs);
+	EnVector2& operator-= (const EnVector2& rhs);
 	float x;
 	float y;
+	EnVector2 Normalized();
+	float GetMagnitude();
 };
 
-struct EnVector3
+class EnVector3
 {
-	EnVector3(){}
-	EnVector3(const float initX, const float initY, const float initZ)
-		: x(initX), y(initY), z(initZ){}
+public:
+	EnVector3();
+	EnVector3(const float& initX, const float& initY, const float& initZ);
+	inline EnVector3 operator+ (const EnVector3& rhs);
+	EnVector3& operator+= (const EnVector3& rhs);
 	float x;
 	float y;
 	float z;
+	EnVector3 Normalized();
+	float GetMagnitude();
 };
 
 struct Vertex
@@ -56,5 +66,6 @@ enum GameKey
 
 namespace Util
 {
-	
+	EnVector2 ScalarProduct2D(const EnVector2& v, const float& s);
+	EnVector3 ScalarProduct3D(const EnVector3& v, const float& s);
 }

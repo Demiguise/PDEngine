@@ -39,15 +39,10 @@ void Entity::Update()
 
 bool Entity::OnEvent(IEvent* e)
 {
-	if (e->eType == "TestEvent")
-	{
-		OutputDebugString(L"Consuming Test Event!\n");
-		return true;
-	}
 	return false;
 }
 
-void Entity::AddForce(EnVector3 direction, int power)
+void Entity::AddForce(EnVector3 direction, float power)
 {
-	
+	resultantForce += Util::ScalarProduct3D(direction, power);
 }

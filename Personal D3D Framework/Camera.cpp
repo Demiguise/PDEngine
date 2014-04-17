@@ -53,13 +53,6 @@ void Camera::SetRotation(EnVector3 newRot)
 	rotation = newRot;
 }
 
-XMMATRIX Camera::GetViewMatrix()
-{
-	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	XMVECTOR camPosVector = XMVectorSet(position.x, position.y, position.z, 1.0f);
-	return XMMatrixLookAtLH(camPosVector, XMVectorZero(), up);
-}
-
 bool Camera::OnEvent(IEvent* e)
 {
 	if (e->eType == "UserKeyPress")

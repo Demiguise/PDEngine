@@ -15,7 +15,7 @@ public:
 	~Entity(void);
 	virtual void Update();
 	virtual bool OnEvent(IEvent* e);
-	void AddForce(EnVector3 direction, int power);
+	void AddForce(EnVector3 direction, float power);
 
 	UINT uID;
 	EnVector3 position;

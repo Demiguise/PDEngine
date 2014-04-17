@@ -1,6 +1,5 @@
 #include "D3DRenderer.h"
 
-
 //Initialisations
 D3DRenderer::D3DRenderer(HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWidth)
 	:	mWindowHeight(wHeight),
@@ -214,15 +213,17 @@ void D3DRenderer::OnResize(UINT newHeight, UINT newWidth)
 	mScreenViewport.Height = static_cast<float>(newHeight);
 	mScreenViewport.MinDepth = 0.0f;
 	mScreenViewport.MaxDepth = 1.0f;
-
+	
 	mDeviceContext->RSSetViewports(1, &mScreenViewport);
-
-	mProjMatrix = XMMatrixPerspectiveFovLH(0.25f*Pi, newWidth/newHeight, 1.0f, 1000.0f);
+	
+	mProjMatrix = XMMatrixPerspectiveFovLH(0.25f*3.14f, newWidth/newHeight, 1.0f, 1000.0f);
 }
 
-void D3DRenderer::UpdateScene(XMMATRIX* viewMatrix)
+void D3DRenderer::UpdateScene(const EnVector3 &camPos)
 {
-	mCamViewMatrix = *viewMatrix;
+	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	XMVECTOR camPosVector = XMVectorSet(camPos.x, camPos.y, camPos.z, 1.0f);
+	mCamViewMatrix = XMMatrixLookAtLH(camPosVector, XMVectorZero(), up);
 }
 
 void D3DRenderer::DrawScene()
