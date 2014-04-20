@@ -7,34 +7,38 @@
 #include <string>
 #include <queue>
 
+#include "Timer.h"
+
 class EnVector2
 {
 public:
 	EnVector2();
 	EnVector2(const float& initX, const float& initY);
-	inline EnVector2 operator+ (const EnVector2& rhs);
 	EnVector2& operator+= (const EnVector2& rhs);
-	inline EnVector2 operator- (const EnVector2& rhs);
 	EnVector2& operator-= (const EnVector2& rhs);
 	float x;
 	float y;
 	EnVector2 Normalized();
 	float GetMagnitude();
 };
+EnVector2 operator+ (EnVector2 lhs, const EnVector2& rhs);
+EnVector2 operator- (EnVector2 lhs, const EnVector2& rhs);
 
 class EnVector3
 {
 public:
 	EnVector3();
 	EnVector3(const float& initX, const float& initY, const float& initZ);
-	inline EnVector3 operator+ (const EnVector3& rhs);
 	EnVector3& operator+= (const EnVector3& rhs);
+	EnVector3& operator-= (const EnVector3& rhs);
 	float x;
 	float y;
 	float z;
 	EnVector3 Normalized();
 	float GetMagnitude();
 };
+EnVector3 operator+ (EnVector3 lhs, const EnVector3& rhs);
+EnVector3 operator- (EnVector3 lhs, const EnVector3& rhs);
 
 struct Vertex
 {

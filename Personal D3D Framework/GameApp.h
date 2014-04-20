@@ -25,5 +25,7 @@ public:
 	IEventManager* mEventManager;
 	PhysicsManager* mPhysicsManager;
 	Camera* mCamera;
+	Timer* mTimer;
+	Timer* physicsTimer;
 };
 

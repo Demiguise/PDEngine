@@ -5,29 +5,49 @@ Entity::Entity(UINT ID, EnVector3 initPos, EnVector3 initRot)
 	uID = ID;
 	position = initPos;
 	rotation = initRot;
+	forceAccum = EnVector3();
+	velocity = EnVector3();
+	rigidBody = 0;
 }
 
 Entity::Entity(UINT ID, EnVector3 initPos)
 {
 	uID = ID;
 	position = initPos;
-	rotation = EnVector3(0.0f, 0.0f, 0.0f);
+	rotation = EnVector3();
+	forceAccum = EnVector3();
+	velocity = EnVector3();
+	rigidBody = 0;
 }
 
 Entity::Entity(UINT ID)
 {
 	uID = ID;
-	position = EnVector3(0,0,0);
-	rotation = EnVector3(0.0f, 0.0f, 0.0f);
-	//Testing events.
-	IEventManager* eManager = IEventManager::GetInstance();
-	eManager->AddListener("TestEvent", this);
+	position = EnVector3();
+	rotation = EnVector3();
+	forceAccum = EnVector3();
+	velocity = EnVector3();
+	rigidBody = 0;
+}
+
+void Entity::SetRigidBody(UINT typeFlag, UINT initMass, float scale)
+{
+	switch (typeFlag)
+	{
+	case ColliderType::Base:
+		rigidBody = new CRigidBody(initMass);
+		break;
+	case ColliderType::Box:
+		rigidBody = new BoxCollider(initMass, scale);
+		break;
+	}
 }
 
 Entity::~Entity(void)
 {
 	IEventManager* eventMan = IEventManager::GetInstance();
 	eventMan->RemoveAllListenersFromEnt(this);
+	delete rigidBody;
 }
 
 //Runtime
@@ -44,5 +64,5 @@ bool Entity::OnEvent(IEvent* e)
 
 void Entity::AddForce(EnVector3 direction, float power)
 {
-	resultantForce += Util::ScalarProduct3D(direction, power);
+	forceAccum += Util::ScalarProduct3D(direction, power);
 }

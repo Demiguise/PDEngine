@@ -14,6 +14,7 @@
     <ProjectGuid>{4390C6CC-1F26-4EC4-AE3E-AFC939DEED1E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PersonalD3DFramework</RootNamespace>
+    <ProjectName>PDEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -79,6 +80,7 @@
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Colliders.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="D3DBufferManager.h" />
     <ClInclude Include="D3DCommon.h" />
@@ -92,12 +94,13 @@
     <ClInclude Include="PhysicsManager.h" />
     <ClInclude Include="RenderableObject.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Colliders.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Common.cpp" />
@@ -112,11 +115,11 @@
     <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="RenderableObject.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="Models\Box.obj">

@@ -12,6 +12,7 @@ D3DRenderer::D3DRenderer(HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWid
 	rendererName = "DirectX11";
 	mHInst = hInstance;
 	mHWnd = hWnd;	
+	setWireframe = false;
 	XMMATRIX i = XMMatrixIdentity(); //Quickly initializing the Projection and View matrices.
 	mProjMatrix = mCamViewMatrix = i;
 	Init();
@@ -160,6 +161,7 @@ void D3DRenderer::InitEffects()
 	mETech = mEffect->GetTechniqueByName("ColorTech");
 }
 
+
 //Runtime
 
 void D3DRenderer::OnResize(UINT newHeight, UINT newWidth)
@@ -237,7 +239,7 @@ void D3DRenderer::DrawScene()
 	mDeviceContext->IASetInputLayout(mInputLayout);
 	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
-	mDeviceContext->RSSetState(mRSD);
+	if (setWireframe) { mDeviceContext->RSSetState(mRSD); }
 
 	ID3DX11EffectMatrixVariable* mEffectWorldViewProj = mEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
 

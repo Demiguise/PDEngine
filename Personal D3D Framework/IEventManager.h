@@ -18,6 +18,7 @@ public:
 	void RemoveAllListenersFromEnt(Entity* regEntity);
 	void QueueEvent(IEvent* newEvent);
 	void Update();
+
 private:
 	IEventManager();
 	static IEventManager* m_pInstance;

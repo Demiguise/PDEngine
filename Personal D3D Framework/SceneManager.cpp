@@ -27,6 +27,13 @@ void SceneManager::RemoveEntity(Entity* entity)
 	}
 }
 
+void SceneManager::UpdateEntities()
+{
+	for (UINT i = 0 ; i < availableEntities.size() ; ++i)
+	{
+		availableEntities[i]->Update();
+	}
+}
 
 UINT SceneManager::GenerateUID()
 {

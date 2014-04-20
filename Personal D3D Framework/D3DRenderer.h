@@ -53,5 +53,6 @@ private:
 	//Others
 	XMMATRIX mCamViewMatrix;
 	XMMATRIX mProjMatrix;
+	bool setWireframe;
 };
 

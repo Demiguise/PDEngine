@@ -16,6 +16,7 @@ public:
 	void RemoveEntity(Entity* entity);
 	UINT GenerateUID();
 	void SetActiveCamera(Camera* newCam);
+	void UpdateEntities();
 
 	Camera* activeCamera;
 	bool sceneChangeThisFrame;
