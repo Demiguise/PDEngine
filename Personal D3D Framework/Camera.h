@@ -1,7 +1,6 @@
 #pragma once
 #include "Entity.h"
 #include "Common.h"
-#include "IEvent.h"
 #include "IEventManager.h"
 
 class Camera :

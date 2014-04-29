@@ -27,11 +27,12 @@ D3DRenderer::~D3DRenderer()
 
 bool D3DRenderer::Init()
 {
+	GameLog::Log("[D3DRenderer] Beginning Initialisation.", DebugLevel::Normal);
 	if (!InitDirect3D()) { return false; }
 	InitEffects();
-	if (!InitBuffers()) { return false; }
 	CreateInputLayer();
 	mBufferManager = new D3DBufferManager(md3dDevice);
+	GameLog::Log("[D3DRenderer] Initialisation Complete.", DebugLevel::Normal);
 	return true;
 }
 
@@ -77,35 +78,12 @@ bool D3DRenderer::InitDirect3D()
 
 	if (!md3dDevice)
 	{
+		GameLog::Log("[D3DRenderer] D3DDevice creation failed.", DebugLevel::Normal);
 		MessageBox(mHWnd, L"D3DDevice creation has failed.", 0, 0);
 		return false;
 	}
 	OnResize(mWindowHeight, mWindowWidth);
-	return true;
-}
-
-bool D3DRenderer::InitBuffers()
-{
-	D3D11_BUFFER_DESC vbd;
-	vbd.Usage = D3D11_USAGE_DYNAMIC;
-	vbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.ByteWidth = sizeof(Vertex) * 400; // This seems silly and not really "Dynamic"
-	vbd.StructureByteStride = 0;
-	vbd.MiscFlags = 0;
-
-	md3dDevice->CreateBuffer(&vbd, NULL, &mVBuffer);
-
-	D3D11_BUFFER_DESC ibd;
-	ibd.Usage = D3D11_USAGE_DYNAMIC;
-	ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.ByteWidth = sizeof(UINT) * 400;
-	ibd.StructureByteStride = 0;
-	ibd.MiscFlags = 0;
-
-	md3dDevice->CreateBuffer(&ibd, NULL, &mIBuffer);
-
+	GameLog::Log("[D3DRenderer] D3DDevice creation succeeded.", DebugLevel::Normal);
 	return true;
 }
 
@@ -160,7 +138,6 @@ void D3DRenderer::InitEffects()
 	ReleaseCOM(compiledShader);
 	mETech = mEffect->GetTechniqueByName("ColorTech");
 }
-
 
 //Runtime
 

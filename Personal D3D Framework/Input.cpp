@@ -25,43 +25,35 @@ CInput::~CInput()
 void CInput::Update(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	IEventManager* eventManager = IEventManager::GetInstance();
-	IEvent* inputEvent = new IEvent();
+	InputEvent* inputEvent = new InputEvent();
 	switch (msg)
 	{
 	case WM_KEYDOWN:
 		inputEvent->eType = "UserKeyPress";
-		inputEvent->pDataSize = sizeof(GameKey);
-		inputEvent->eData = TranslateKeyPress(wParam);
+		inputEvent->keyEvent = TranslateKeyPress(wParam);
 		eventManager->QueueEvent(inputEvent);
 		break;
 	case WM_KEYUP:
 		inputEvent->eType = "UserKeyRelease";
-		inputEvent->pDataSize = sizeof(GameKey);
-		inputEvent->eData = TranslateKeyPress(wParam);
+		inputEvent->keyEvent = TranslateKeyPress(wParam);
 		eventManager->QueueEvent(inputEvent);
 		break;
 	}
 }
 
-GameKey* CInput::TranslateKeyPress(WPARAM wParam)
+GameKey CInput::TranslateKeyPress(WPARAM wParam)
 {
-	GameKey* keyPress;
 	switch(wParam)
 	{
 	case 65:
-		keyPress = new GameKey(GameKey::A);
-		break;
+		return GameKey::A;
 	case 68:
-		keyPress = new GameKey(GameKey::D);
-		break;
+		return GameKey::D;
 	case 83:
-		keyPress = new GameKey(GameKey::S);
-		break;
+		return GameKey::S;
 	case 87:
-		keyPress = new GameKey(GameKey::W);
-		break;
+		return GameKey::W;
 	default:
-		keyPress = new GameKey(GameKey::A);
+		return GameKey::A;
 	}
-	return keyPress;
 }

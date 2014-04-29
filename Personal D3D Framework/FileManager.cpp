@@ -3,7 +3,7 @@
 
 FileManager::FileManager(void)
 {
-
+	GameLog::Log("[FileManager] Initialisation Complete.", DebugLevel::Normal);
 }
 
 
@@ -24,7 +24,7 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 	std::vector<EnVector3> lNormals;
 	std::vector<EnVector2> lTexCoords;
 	std::vector<UINT> lFaces;
-	OutputDebugString(L"Loading data from file.\n");
+	//OutputDebugString(L"Loading data from file.\n");
 	while (std::getline(ifs, line))
 	{
 		if(line.substr(0, 2) == "v ")
@@ -60,7 +60,7 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 			//Ignore any other lines
 		}
 	}
-	OutputDebugString(L"Finished reading data from file.\n");
+	//OutputDebugString(L"Finished reading data from file.\n");
 	ModelData newModel = ConstructModelData(lVertices, lNormals, lTexCoords, lFaces);
 	newModel.semanticName = fileName;
 	return newModel;
@@ -109,6 +109,14 @@ ModelData FileManager::ConstructModelData(	std::vector<EnVector3> verts,
 											std::vector<UINT> faces)
 {
 	ModelData newMesh;
+	if (normals.size() == 0)
+	{
+		normals = std::vector<EnVector3>(verts.size(), EnVector3(0.0f, 0.0f, 0.0f));
+	}
+	if (texCoords.size() == 0)
+	{
+		texCoords = std::vector<EnVector2>(verts.size(), EnVector2(0.0f, 0.0f));
+	}
 	for (UINT i = 0 ; i < verts.size() ; ++i)
 	{
 		newMesh.vData.push_back(Vertex(verts[i], normals[i], texCoords[i]));
@@ -116,3 +124,5 @@ ModelData FileManager::ConstructModelData(	std::vector<EnVector3> verts,
 	newMesh.iData = faces;
 	return newMesh;
 }
+
+//

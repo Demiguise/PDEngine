@@ -30,19 +30,6 @@ Entity::Entity(UINT ID)
 	rigidBody = 0;
 }
 
-void Entity::SetRigidBody(UINT typeFlag, UINT initMass, float scale)
-{
-	switch (typeFlag)
-	{
-	case ColliderType::Base:
-		rigidBody = new CRigidBody(initMass);
-		break;
-	case ColliderType::Box:
-		rigidBody = new BoxCollider(initMass, scale);
-		break;
-	}
-}
-
 Entity::~Entity(void)
 {
 	IEventManager* eventMan = IEventManager::GetInstance();
@@ -65,4 +52,5 @@ bool Entity::OnEvent(IEvent* e)
 void Entity::AddForce(EnVector3 direction, float power)
 {
 	forceAccum += Util::ScalarProduct3D(direction, power);
+	GameLog::Log("ASD\n", DebugLevel::Normal);
 }

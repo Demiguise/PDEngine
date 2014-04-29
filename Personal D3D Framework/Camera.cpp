@@ -33,7 +33,7 @@ Camera::~Camera()
 void Camera::AddListeners()
 {
 	IEventManager* eventMan = IEventManager::GetInstance();
-	eventMan->AddListener("UserKeyPress", this);
+	//eventMan->AddListener("UserKeyPress", this);
 	eventMan->AddListener("UserKeyRelease", this);
 }
 
@@ -57,8 +57,8 @@ bool Camera::OnEvent(IEvent* e)
 {
 	if (e->eType == "UserKeyPress")
 	{
-		GameKey* keyPress = static_cast<GameKey*>(e->eData);
-		switch (*keyPress)
+		InputEvent* keyPress = static_cast<InputEvent*>(e);
+		switch (keyPress->keyEvent)
 		{
 		case GameKey::W:
 			GhettoMove(EnVector3(1.0f, 0.0f, 0.0f));
@@ -73,6 +73,7 @@ bool Camera::OnEvent(IEvent* e)
 			GhettoMove(EnVector3(0.0f, -1.0f, 0.0f));
 			break;
 		}
+		delete keyPress;
 		return true;
 	}
 	return false;

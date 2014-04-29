@@ -12,6 +12,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 GameApp::GameApp(HINSTANCE hInstance)
 {
+	GameLog::InitLog();
 	mEventManager = IEventManager::GetInstance();
 	mGameWindow = new GameWindow(this, hInstance, mClientHeight, mClientWidth);
 	mRenderer = new D3DRenderer(hInstance, mGameWindow->GetMainWHandle(),
@@ -20,7 +21,12 @@ GameApp::GameApp(HINSTANCE hInstance)
 	mSceneManager = new SceneManager(mFileManager);
 	mCamera = new Camera(mSceneManager->GenerateUID(),
 					EnVector3(30.0f, 30.0f, -30.0f));
-	mPhysicsManager = new PhysicsManager();
+
+	std::vector<ModelData> colliders;
+	colliders.push_back(mFileManager->LoadModelData("Models/Colliders/RBCube.obj"));
+	colliders.push_back(mFileManager->LoadModelData("Models/Colliders/RBCylinder.obj"));
+	colliders.push_back(mFileManager->LoadModelData("Models/Colliders/RBSphere.obj"));
+	mPhysicsManager = new PhysicsManager(colliders);
 	mSceneManager->RegisterEntity(mCamera);
 	mSceneManager->SetActiveCamera(mCamera);
 	mTimer = new Timer();
@@ -35,8 +41,7 @@ void GameApp::CreateTestObjects()
 													EnVector3(-2.0f, 0.0f, 0.0f));
 	mRenderer->CreateBuffer(nObj);
 	mSceneManager->RegisterEntity(nObj);
-	mPhysicsManager->RegisterEntity(nObj);
-	nObj->SetRigidBody(1, 1, 1.0f);
+	mPhysicsManager->RegisterEntity(nObj, ColliderType::Box, 1);
 	nObj->AddForce(EnVector3(1.0f, 0.0f, 0.0f), 250);
 
 	CRenderableObject* nObj2 = new CRenderableObject(mSceneManager->GenerateUID(),
@@ -44,8 +49,7 @@ void GameApp::CreateTestObjects()
 													EnVector3(2.0f, 0.0f, 0.0f));
 	mRenderer->CreateBuffer(nObj2);
 	mSceneManager->RegisterEntity(nObj2);
-	mPhysicsManager->RegisterEntity(nObj2);
-	nObj2->SetRigidBody(1, 1, 1.0f);
+	mPhysicsManager->RegisterEntity(nObj2, ColliderType::Box, 1);
 	nObj2->AddForce(EnVector3(-1.0f, 0.0f, 0.0f), 250);
 }
 
@@ -74,10 +78,6 @@ int GameApp::Run()
 			{
 				mPhysicsManager->Update(0.005f);
 				physicsTimer->resetTimer();
-				if (mPhysicsManager->RayCast(EnVector3(0.0f,0.0f,0.0f), EnVector3(1.0f, 0.0f, 0.0f)))
-				{
-					OutputDebugString(L"Raycast is currently intersecting an object!\n");
-				}
 			}
 			
 			mEventManager->Update();

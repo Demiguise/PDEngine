@@ -1,17 +1,29 @@
 #include "PhysicsManager.h"
 
-PhysicsManager::PhysicsManager()
+PhysicsManager::PhysicsManager(const std::vector<ModelData>& colliders)
 {
 	gravAcceleration = 9.81f; //ms^-2
+	colliderModels = colliders;
+	GameLog::Log("[Physics] Initialisation Complete.", DebugLevel::Normal);
 }
 
 PhysicsManager::~PhysicsManager()
 {
 }
 
-void PhysicsManager::RegisterEntity(Entity* entity)
+void PhysicsManager::RegisterEntity(Entity* entity, ColliderType rbType,
+									UINT mass)
 {
 	sceneCollideables.push_back(entity);
+	switch (rbType)
+	{
+	case ColliderType::Box:
+		entity->rigidBody = new BoxCollider(colliderModels[0], mass);
+		break;
+	default:
+		entity->rigidBody = new CRigidBody(mass);
+		break;
+	}
 }
 
 void PhysicsManager::RemoveEntity(Entity* entity)
@@ -65,13 +77,9 @@ bool PhysicsManager::RayCast(EnVector3 pos, EnVector3 dir, UINT dist)
 		EnVector3 curSamplePos = pos + Util::ScalarProduct3D(dir, (sampleSize * i));
 		for (UINT j = 0 ; j < sceneCollideables.size() ; ++j)
 		{
-			if (sceneCollideables[j]->rigidBody->CheckForIntersection(curSamplePos))
-			{
 				//Do some code.
 				//How do I want the information to come back out?
 				//Bool for obvious true/false, but what about which object was hit? Unity style 'Out' object?
-				return true;
-			}
 		}
 	}
 	return false;

@@ -85,7 +85,7 @@
     <ClInclude Include="D3DBufferManager.h" />
     <ClInclude Include="D3DCommon.h" />
     <ClInclude Include="D3DRenderer.h" />
-    <ClInclude Include="IEvent.h" />
+    <ClInclude Include="Events.h" />
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameApp.h" />
@@ -106,7 +106,7 @@
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="D3DBufferManager.cpp" />
     <ClCompile Include="D3DRenderer.cpp" />
-    <ClCompile Include="IEvent.cpp" />
+    <ClCompile Include="Events.cpp" />
     <ClCompile Include="IEventManager.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="GameApp.cpp" />
@@ -123,6 +123,15 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="Models\Box.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\Colliders\RBCube.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\Colliders\RBCylinder.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="Models\Colliders\RBSphere.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Object>
     <Object Include="Models\Nyx.obj">

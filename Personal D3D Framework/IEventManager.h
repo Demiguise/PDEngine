@@ -1,6 +1,6 @@
 #pragma once
 #include "Common.h"
-#include "IEvent.h"
+#include "Events.h"
 #include "Entity.h"
 
 //Singleton Design Pattern

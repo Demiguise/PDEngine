@@ -2,7 +2,7 @@
 #include "Common.h"
 #include "Colliders.h"
 #include "IEventManager.h"
-#include "IEvent.h"
+#include "Events.h"
 
 class IEventManager;
 class CRigidBody;
@@ -17,7 +17,6 @@ public:
 	virtual void Update();
 	virtual bool OnEvent(IEvent* e);
 	void AddForce(EnVector3 direction, float power);
-	void SetRigidBody(UINT typeFlag, UINT initMass, float scale);
 
 	UINT uID;
 	EnVector3 position;

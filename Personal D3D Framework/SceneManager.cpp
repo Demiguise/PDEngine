@@ -3,6 +3,7 @@
 SceneManager::SceneManager(FileManager* fileManager)
 {
 	mFileManager = fileManager;
+	GameLog::Log("[SceneManager] Initialisation Complete.", DebugLevel::Normal);
 }
 
 

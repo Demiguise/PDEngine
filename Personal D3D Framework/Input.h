@@ -2,7 +2,6 @@
 #include <Windows.h>
 #include <windowsx.h>
 #include <WinUser.h>
-#include "IEvent.h"
 #include "IEventManager.h"
 
 class CInput
@@ -14,6 +13,6 @@ public:
 private:
 	CInput();
 	static CInput* m_pInstance;
-	GameKey* TranslateKeyPress(WPARAM wParam);
+	GameKey TranslateKeyPress(WPARAM wParam);
 };
 

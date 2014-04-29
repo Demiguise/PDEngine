@@ -49,6 +49,9 @@
     <Filter Include="Header Files\Physics">
       <UniqueIdentifier>{7b343eb0-e520-44a1-bde6-a8bebeeb8e59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Models\Colliders">
+      <UniqueIdentifier>{0f9571e4-24bc-4ef5-a2b9-e37930201e1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWindow.h">
@@ -87,9 +90,6 @@
     <ClInclude Include="D3DCommon.h">
       <Filter>Header Files\Rendering\DX11</Filter>
     </ClInclude>
-    <ClInclude Include="IEvent.h">
-      <Filter>Header Files\Events</Filter>
-    </ClInclude>
     <ClInclude Include="IEventManager.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
@@ -110,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="Colliders.h">
       <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>Header Files\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +152,6 @@
     <ClCompile Include="D3DBufferManager.cpp">
       <Filter>Source Files\Rendering\DX11</Filter>
     </ClCompile>
-    <ClCompile Include="IEvent.cpp">
-      <Filter>Source Files\Events</Filter>
-    </ClCompile>
     <ClCompile Include="IEventManager.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
@@ -173,6 +173,9 @@
     <ClCompile Include="Colliders.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Events.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Object Include="Models\Nyx.obj">
@@ -180,6 +183,15 @@
     </Object>
     <Object Include="Models\Box.obj">
       <Filter>Models</Filter>
+    </Object>
+    <Object Include="Models\Colliders\RBCube.obj">
+      <Filter>Models\Colliders</Filter>
+    </Object>
+    <Object Include="Models\Colliders\RBCylinder.obj">
+      <Filter>Models\Colliders</Filter>
+    </Object>
+    <Object Include="Models\Colliders\RBSphere.obj">
+      <Filter>Models\Colliders</Filter>
     </Object>
   </ItemGroup>
   <ItemGroup>

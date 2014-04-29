@@ -6,8 +6,13 @@ class IEvent
 public:
 	IEvent();
 	~IEvent();
-	void* eData;
-	UINT pDataSize;
 	std::string eType;
 };
 
+class InputEvent : public IEvent
+{
+public:
+	InputEvent();
+	~InputEvent();
+	GameKey keyEvent;
+};

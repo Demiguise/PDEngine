@@ -14,7 +14,6 @@ IEventManager* IEventManager::GetInstance()
 
 IEventManager::IEventManager()
 {
-
 }
 
 
@@ -68,7 +67,7 @@ void IEventManager::Update()
 	//Retrieve all registered listeners for the event type.
 	//Pass event onto all of them. If ANYONE comes back with 'True' the event is consumed and no longer passed on. Breaks from loop and continues on to next statement.
 	//Once complete, DELETE the event from both the queue and memory.
-	if (!mainEventQueue.empty())
+	while (!mainEventQueue.empty())
 	{
 		listenerIT lisIT;
 		lisIT = listenerMap.find(mainEventQueue.front()->eType);
@@ -85,7 +84,7 @@ void IEventManager::Update()
 		else
 		{
 			//No-one is listening for that event.
-			OutputDebugString(L"No Listeners found for event. \n");
+			GameLog::Log("[EventManager] No Listeners found for event.", DebugLevel::Warning);
 		}
 		delete mainEventQueue.front();
 		mainEventQueue.pop();

@@ -12,8 +12,6 @@ class CRigidBody
 public:
 	CRigidBody(UINT initMass);
 	~CRigidBody();
-	virtual bool CheckForIntersection(EnVector3 pos);
-
 	EnVector3 centrePoint;
 	bool collidable;
 	bool affectedByGravity;
@@ -26,10 +24,10 @@ public:
 class BoxCollider : public CRigidBody
 {
 public:
-	BoxCollider(UINT initMass, float scale);
+	BoxCollider(const ModelData& model, UINT initMass);
 	~BoxCollider();
-	bool CheckForIntersection(EnVector3 pos);
+	bool CheckForIntersection(EnVector3 pos, EnVector3 dir, EnVector3& intersectPoint);
 	
-	EnVector3 extents;
+	ModelData rbModel;
 };
 

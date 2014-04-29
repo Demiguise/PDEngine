@@ -9,6 +9,7 @@ public:
 	FileManager(void);
 	~FileManager(void);
 	ModelData LoadModelData(LPCSTR fileName);
+	bool CreateFile();
 
 private:
 	std::istringstream CleanFaceData (std::string line);
