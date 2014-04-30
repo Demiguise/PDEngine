@@ -151,15 +151,3 @@ namespace Util
 	}
 }
 
-namespace GameLog
-{
-	bool GameLog::InitLog()
-	{
-		OutputDebugString(L"Initialising Log!\n");
-		return true;
-	}
-
-	void GameLog::Log(const char* message, const DebugLevel logLevel)
-	{
-	}
-}

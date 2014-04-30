@@ -8,6 +8,9 @@
 #include <queue>
 
 #include "Timer.h"
+#include "GameLog.h"
+
+class FileManager;
 
 class EnVector2
 {
@@ -80,24 +83,18 @@ enum GameKey
 	D
 };
 
+//Dat Global Namespace
+namespace
+{
+	int g_logVerbosity = 3;
+	int g_writeToLogVerbosity = 3;
+
+};
+
 namespace Util
 {
 	EnVector2 ScalarProduct2D(const EnVector2& v, const float& s);
 	EnVector3 ScalarProduct3D(const EnVector3& v, const float& s);
-}
-
-//0 None (Don't use for logging) | 1 Normal | 2 Errors | 3 Warnings
-enum DebugLevel
-{
-	None = 0, 
-	Normal,
-	Error,
-	Warning,
 };
 
-namespace GameLog
-{
-	bool InitLog();
-	void Log(const char* message, const DebugLevel logLevel);
-};
 

@@ -12,12 +12,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 GameApp::GameApp(HINSTANCE hInstance)
 {
-	GameLog::InitLog();
+	mFileManager = FileManager::GetInstance();
 	mEventManager = IEventManager::GetInstance();
 	mGameWindow = new GameWindow(this, hInstance, mClientHeight, mClientWidth);
 	mRenderer = new D3DRenderer(hInstance, mGameWindow->GetMainWHandle(),
 											mClientHeight, mClientWidth);
-	mFileManager = new FileManager;
 	mSceneManager = new SceneManager(mFileManager);
 	mCamera = new Camera(mSceneManager->GenerateUID(),
 					EnVector3(30.0f, 30.0f, -30.0f));

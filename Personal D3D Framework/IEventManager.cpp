@@ -19,7 +19,7 @@ IEventManager::IEventManager()
 
 IEventManager::~IEventManager()
 {
-
+	delete m_pInstance;
 }
 
 void IEventManager::AddListener(std::string eventType, Entity* regEntity)

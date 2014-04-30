@@ -1,15 +1,25 @@
 #include "FileManager.h"
 
+FileManager* FileManager::m_pInstance = 0;
 
-FileManager::FileManager(void)
+FileManager* FileManager::GetInstance()
 {
-	GameLog::Log("[FileManager] Initialisation Complete.", DebugLevel::Normal);
+	if (!m_pInstance)
+	{
+		m_pInstance = new FileManager();
+	}
+	return m_pInstance;
 }
 
-
-FileManager::~FileManager(void)
+FileManager::FileManager()
 {
+	//GameLog::Log("[FileManager] Initialisation Complete.", DebugLevel::Normal);
+	logStream = 0;
+}
 
+FileManager::~FileManager()
+{
+	delete m_pInstance;
 }
 
 ModelData FileManager::LoadModelData(LPCSTR fileName)
@@ -125,4 +135,11 @@ ModelData FileManager::ConstructModelData(	std::vector<EnVector3> verts,
 	return newMesh;
 }
 
-//
+void FileManager::WriteToLog(const char* message)
+{
+	if (logStream == NULL)
+	{
+		
+		//Make new file
+	}
+}

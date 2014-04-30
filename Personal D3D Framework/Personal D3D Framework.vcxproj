@@ -86,6 +86,7 @@
     <ClInclude Include="D3DCommon.h" />
     <ClInclude Include="D3DRenderer.h" />
     <ClInclude Include="Events.h" />
+    <ClInclude Include="GameLog.h" />
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameApp.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="GameLog.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

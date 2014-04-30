@@ -31,14 +31,13 @@ void CInput::Update(UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		inputEvent->eType = "UserKeyPress";
 		inputEvent->keyEvent = TranslateKeyPress(wParam);
-		eventManager->QueueEvent(inputEvent);
 		break;
 	case WM_KEYUP:
 		inputEvent->eType = "UserKeyRelease";
 		inputEvent->keyEvent = TranslateKeyPress(wParam);
-		eventManager->QueueEvent(inputEvent);
 		break;
 	}
+	eventManager->QueueEvent(inputEvent);
 }
 
 GameKey CInput::TranslateKeyPress(WPARAM wParam)
