@@ -14,7 +14,12 @@ FileManager* FileManager::GetInstance()
 FileManager::FileManager()
 {
 	//GameLog::GetInstance()->Log("[FileManager] Initialisation Complete.", DebugLevel::Normal);
-	logStream = 0;
+	//Test if a log file already exists.
+	logStream.open(logLocation, std::fstream::out);
+	if (logStream.good())
+	{
+		MoveFileA(logLocation, backupLocation);
+	}
 }
 
 FileManager::~FileManager()
@@ -137,9 +142,15 @@ ModelData FileManager::ConstructModelData(	std::vector<EnVector3> verts,
 
 void FileManager::WriteToLog(const char* message)
 {
-	if (logStream == NULL)
+	logStream.open(logLocation, std::fstream::app | std::fstream::out);
+	if (logStream.fail())
 	{
-		
+		logStream = std::fstream(logLocation, std::fstream::app | std::fstream::out);
 		//Make new file
 	}
+	std::time_t result = std::time(NULL);
+	logStream << '<' << std::ctime(&result) << '>';
+	logStream.write(message, strlen(message));
+	logStream.close();
 }
+

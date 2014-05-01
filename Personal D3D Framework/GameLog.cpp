@@ -28,7 +28,7 @@ void GameLog::Log(const char* logLine, const DebugChannel logChannel,  const Deb
 		char buffer[512];
 		va_list args;
 		va_start(args, logLine);
-		vsnprintf_s(buffer, 512, AppendNewline(logLine), args);
+		vsnprintf_s(buffer, 512,  AppendNewlineChar(logLine), args);
 		va_end(args);
 		OutputDebugStringA((LPCSTR)buffer);
 		if (logLevel <= g_writeToLogVerbosity)
@@ -38,7 +38,8 @@ void GameLog::Log(const char* logLine, const DebugChannel logChannel,  const Deb
 	}
 }
 
-char* GameLog::AppendNewline(const char* input)
+
+char* GameLog::AppendNewlineChar(const char* input)
 {
 	int inputSize = strlen(input);
 	char* output = new char[inputSize+1];

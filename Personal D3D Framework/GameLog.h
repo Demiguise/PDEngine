@@ -28,6 +28,6 @@ public:
 private:
 	GameLog();
 	static GameLog* m_pInstance;
-	char* AppendNewline(const char* input);
+	char* AppendNewlineChar(const char* input);
 };
 

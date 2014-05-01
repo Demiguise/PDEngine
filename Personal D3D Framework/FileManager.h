@@ -2,6 +2,10 @@
 #include "Common.h"
 #include <fstream>
 #include <sstream>
+#include <ctime>
+
+const char logLocation[] = "Game.log";
+const char backupLocation[] = "/Logs/Game.log";
 
 class FileManager
 {
@@ -20,6 +24,6 @@ private:
 									std::vector<EnVector3> normals,
 									std::vector<EnVector2> texCoords,
 									std::vector<UINT> faces);
-	std::fstream* logStream;
+	std::fstream logStream;
 };
 
