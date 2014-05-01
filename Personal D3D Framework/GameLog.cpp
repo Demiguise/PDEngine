@@ -2,7 +2,7 @@
 
 GameLog* GameLog::m_pInstance = 0;
 
-GameLog* GameLog::getInstance()
+GameLog* GameLog::GetInstance()
 {
 	if (m_pInstance == NULL)
 	{
@@ -21,7 +21,7 @@ GameLog::~GameLog()
 	delete m_pInstance;
 }
 
-void GameLog::Log(const char* logLine, const DebugLevel logLevel)
+void GameLog::Log(const char* logLine, const DebugChannel logChannel,  const DebugLevel logLevel)
 {
 	if (logLevel <= g_logVerbosity)
 	{

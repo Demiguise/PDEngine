@@ -7,10 +7,6 @@
 #include <string>
 #include <queue>
 
-#include "Timer.h"
-#include "GameLog.h"
-
-class FileManager;
 
 class EnVector2
 {

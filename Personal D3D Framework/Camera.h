@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Common.h"
 #include "IEventManager.h"
+#include "GameLog.h"
 
 class Camera :
 	public Entity

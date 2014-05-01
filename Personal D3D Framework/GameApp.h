@@ -7,6 +7,8 @@
 #include "IEventManager.h"
 #include "PhysicsManager.h"
 #include "RenderableObject.h" //For test purposes, should probably remove once finished.
+#include "GameLog.h"
+#include "Timer.h"
 
 class GameWindow;
 

@@ -84,7 +84,7 @@ void IEventManager::Update()
 		else
 		{
 			//No-one is listening for that event.
-			GameLog::Log("[EventManager] No Listeners found for event.", DebugLevel::Warning);
+			GameLog::GetInstance()->Log("[EventManager] No Listeners found for event.", DebugChannel::Events, DebugLevel::Warning);
 		}
 		delete mainEventQueue.front();
 		mainEventQueue.pop();

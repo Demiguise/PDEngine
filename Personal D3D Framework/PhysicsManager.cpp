@@ -4,7 +4,7 @@ PhysicsManager::PhysicsManager(const std::vector<ModelData>& colliders)
 {
 	gravAcceleration = 9.81f; //ms^-2
 	colliderModels = colliders;
-	GameLog::Log("[Physics] Initialisation Complete.", DebugLevel::Normal);
+	GameLog::GetInstance()->Log("[Physics] Initialisation Complete.", DebugChannel::Main, DebugLevel::Normal);
 }
 
 PhysicsManager::~PhysicsManager()

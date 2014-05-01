@@ -3,6 +3,7 @@
 #include "Colliders.h"
 #include "IEventManager.h"
 #include "Events.h"
+#include "GameLog.h"
 
 class IEventManager;
 class CRigidBody;

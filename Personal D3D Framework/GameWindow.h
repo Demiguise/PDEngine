@@ -3,6 +3,7 @@
 #include <windowsx.h>
 #include "GameApp.h"
 #include "Input.h"
+#include "GameLog.h"
 
 class GameApp;
 

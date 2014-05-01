@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "FileManager.h"
 #include "Camera.h"
-
+#include "GameLog.h"
 
 class SceneManager
 {

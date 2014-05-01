@@ -13,7 +13,7 @@ FileManager* FileManager::GetInstance()
 
 FileManager::FileManager()
 {
-	//GameLog::Log("[FileManager] Initialisation Complete.", DebugLevel::Normal);
+	//GameLog::GetInstance()->Log("[FileManager] Initialisation Complete.", DebugLevel::Normal);
 	logStream = 0;
 }
 

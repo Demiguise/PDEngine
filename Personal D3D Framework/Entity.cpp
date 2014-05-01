@@ -52,5 +52,4 @@ bool Entity::OnEvent(IEvent* e)
 void Entity::AddForce(EnVector3 direction, float power)
 {
 	forceAccum += Util::ScalarProduct3D(direction, power);
-	GameLog::Log("ASD", DebugLevel::Normal);
 }

@@ -7,17 +7,24 @@ enum DebugLevel
 	None = 0, 
 	Normal,
 	Error,
-	Warning,
+	Warning
 };
 
-class FileManager;
+enum DebugChannel
+{
+	Main = 0,
+	Rendering,
+	Audio,
+	Input,
+	Events
+};
 
 class GameLog
 {
 public:
 	~GameLog();
-	static GameLog* getInstance();
-	void Log(const char* message, const DebugLevel logLevel);
+	static GameLog* GetInstance();
+	void Log(const char* message, const DebugChannel logChannel, const DebugLevel logLevel);
 private:
 	GameLog();
 	static GameLog* m_pInstance;
