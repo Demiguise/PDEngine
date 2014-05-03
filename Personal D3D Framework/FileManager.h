@@ -3,9 +3,10 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include <direct.h>
 
 const char logLocation[] = "Game.log";
-const char backupLocation[] = "/Logs/Game.log";
+const char backupLocation[] = "./Logs/";
 
 class FileManager
 {
@@ -25,5 +26,7 @@ private:
 									std::vector<EnVector2> texCoords,
 									std::vector<UINT> faces);
 	std::fstream logStream;
+	void GetLocalTime(char* buffer);
+	void MoveAndRenameLog();
 };
 

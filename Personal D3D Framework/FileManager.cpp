@@ -15,10 +15,12 @@ FileManager::FileManager()
 {
 	//GameLog::GetInstance()->Log("[FileManager] Initialisation Complete.", DebugLevel::Normal);
 	//Test if a log file already exists.
-	logStream.open(logLocation, std::fstream::out);
-	if (logStream.good())
+	std::ifstream logFile(logLocation);
+	if (logFile)
 	{
-		MoveFileA(logLocation, backupLocation);
+		logFile.close();
+		MoveAndRenameLog();
+		OutputDebugString(L"Log renamed!");
 	}
 }
 
@@ -142,15 +144,48 @@ ModelData FileManager::ConstructModelData(	std::vector<EnVector3> verts,
 
 void FileManager::WriteToLog(const char* message)
 {
-	logStream.open(logLocation, std::fstream::app | std::fstream::out);
+	logStream.open(logLocation, std::fstream::trunc | std::fstream::out);
 	if (logStream.fail())
 	{
-		logStream = std::fstream(logLocation, std::fstream::app | std::fstream::out);
+		logStream = std::fstream(logLocation, std::fstream::trunc | std::fstream::out);
 		//Make new file
 	}
-	std::time_t result = std::time(NULL);
-	logStream << '<' << std::ctime(&result) << '>';
+	char timeBuf[80];
+	GetLocalTime(timeBuf);
+	logStream << '<' << timeBuf << '>';
 	logStream.write(message, strlen(message));
 	logStream.close();
 }
 
+void FileManager::GetLocalTime(char* buffer)
+{
+	std::time_t rawTime;
+	struct tm* timeInfo;
+	time(&rawTime);
+	timeInfo = localtime(&rawTime);
+	strftime(buffer, 80, "%d-%m %H-%M-%S", timeInfo);
+}
+
+void FileManager::MoveAndRenameLog()
+{
+	if (_mkdir(backupLocation) != 0)
+	{
+		OutputDebugString(L"Failed to create the backup log location");
+	}
+	char timeBuf[80];
+	GetLocalTime(timeBuf);
+	std::string newLogLocation = backupLocation;
+	newLogLocation.append("(");
+	newLogLocation.append(timeBuf);
+	newLogLocation.append(")");
+	newLogLocation.append(" Game.log");
+	std::ofstream destFile(newLogLocation);
+	if (!destFile)
+	{
+		OutputDebugString(L"Couldn't create new outputfile");
+	}
+	std::ifstream originFile(logLocation);
+	destFile << originFile.rdbuf();
+	originFile.close();
+	destFile.close();
+}
