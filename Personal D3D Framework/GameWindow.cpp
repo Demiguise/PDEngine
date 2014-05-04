@@ -62,7 +62,7 @@ LRESULT CALLBACK GameWindow::StaticMsgProc(HWND hWnd, UINT msg, WPARAM wParam, L
 
 void GameWindow::Init()
 {
-	GameLog::GetInstance()->Log("[GameWindow] Beginning initialisation.", DebugChannel::Main, DebugLevel::Normal);
+	GameLog::GetInstance()->Log("[GameWindow] Beginning initialisation.", DebugChannel::Rendering, DebugLevel::Normal);
 	//Describing the WNDCLASS I want to use.
 	WNDCLASS wc;
 	wc.lpszClassName = L"BASEGAMEWINDOW";

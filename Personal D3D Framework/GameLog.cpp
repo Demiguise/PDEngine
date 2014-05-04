@@ -13,7 +13,9 @@ GameLog* GameLog::GetInstance()
 
 GameLog::GameLog()
 {
-
+	logVerbosity = 3;
+	writeToLogVerbosity = 3;
+	activeChannels = 1; //-1 turns on all bits, useful for activating all 32 channels.
 }
 
 GameLog::~GameLog()
@@ -21,22 +23,26 @@ GameLog::~GameLog()
 	delete m_pInstance;
 }
 
-void GameLog::Log(const char* logLine, const DebugChannel logChannel,  const DebugLevel logLevel)
+//Always use a _SINGLE_ channel.
+void GameLog::Log(const char* logLine, const int logChannel,  const DebugLevel logLevel)
 {
-	if (logLevel <= g_logVerbosity)
+	if (logLevel <= logVerbosity)
 	{
-		char buffer[512];
-		char* newLogLine = AppendNewlineChar(logLine);
-		va_list args;
-		va_start(args, logLine);
-		vsnprintf_s(buffer, 512, newLogLine, args);
-		va_end(args);
-		OutputDebugStringA((LPCSTR)buffer);
-		if (logLevel <= g_writeToLogVerbosity)
+		if ((activeChannels | logChannel) == activeChannels)
 		{
-			FileManager::GetInstance()->WriteToLog(buffer);
+			char buffer[512];
+			char* newLogLine = AppendNewlineChar(logLine);
+			va_list args;
+			va_start(args, logLine);
+			vsnprintf_s(buffer, 512, newLogLine, args);
+			va_end(args);
+			OutputDebugStringA((LPCSTR)buffer);
+			if (logLevel <= writeToLogVerbosity)
+			{
+				FileManager::GetInstance()->WriteToLog(buffer);
+			}
+			delete newLogLine;
 		}
-		delete newLogLine;
 	}
 }
 

@@ -79,14 +79,6 @@ enum GameKey
 	D
 };
 
-//Dat Global Namespace
-namespace
-{
-	int g_logVerbosity = 3;
-	int g_writeToLogVerbosity = 3;
-
-};
-
 namespace Util
 {
 	EnVector2 ScalarProduct2D(const EnVector2& v, const float& s);

@@ -10,13 +10,17 @@ enum DebugLevel
 	Warning
 };
 
+//Since it's an int we're using we have 32 possible channels. Sweet!
 enum DebugChannel
 {
-	Main = 0,
-	Rendering,
-	Audio,
-	Input,
-	Events
+	Main = 1,
+	Rendering = 2,
+	Audio = 4,
+	Input = 8,
+	Events = 16,
+	Unused1 = 32,
+	Unused2 = 64,
+	Unused3 = 128,
 };
 
 class GameLog
@@ -24,7 +28,10 @@ class GameLog
 public:
 	~GameLog();
 	static GameLog* GetInstance();
-	void Log(const char* message, const DebugChannel logChannel, const DebugLevel logLevel);
+	void Log(const char* message, const int logChannel, const DebugLevel logLevel);
+	int logVerbosity;
+	int writeToLogVerbosity;
+	int activeChannels;
 private:
 	GameLog();
 	static GameLog* m_pInstance;
