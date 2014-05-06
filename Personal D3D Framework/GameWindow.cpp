@@ -62,7 +62,7 @@ LRESULT CALLBACK GameWindow::StaticMsgProc(HWND hWnd, UINT msg, WPARAM wParam, L
 
 void GameWindow::Init()
 {
-	GameLog::GetInstance()->Log("[GameWindow] Beginning initialisation.", DebugChannel::Rendering, DebugLevel::Normal);
+	GameLog::GetInstance()->Log(DebugChannel::Main, DebugLevel::Normal, "[GameWindow] Beginning initialisation.");
 	//Describing the WNDCLASS I want to use.
 	WNDCLASS wc;
 	wc.lpszClassName = L"BASEGAMEWINDOW";
@@ -80,7 +80,7 @@ void GameWindow::Init()
 	{
 		//Registering has failed for some reason.
 		MessageBox(0, L"Register the window class has failed.", 0, 0);
-		GameLog::GetInstance()->Log("[GameWindow] Window class registration failed.", DebugChannel::Main, DebugLevel::Normal);
+		GameLog::GetInstance()->Log(DebugChannel::Main, DebugLevel::Normal, "[GameWindow] Window class registration failed.");
 		return;
 	}
 
@@ -107,7 +107,7 @@ void GameWindow::Init()
 	if (!mHWnd)
 	{
 		//Creating the window has failed for some reason.
-		GameLog::GetInstance()->Log("[GameWindow] Window creation failed.", DebugChannel::Main, DebugLevel::Normal);
+		GameLog::GetInstance()->Log(DebugChannel::Main, DebugLevel::Normal, "[GameWindow] Window creation failed.");
 		MessageBox(0, L"Creating the window has failed.", 0, 0);
 		return;
 	}
@@ -115,7 +115,7 @@ void GameWindow::Init()
 	mInput = CInput::GetInstance();
 	ShowWindow(mHWnd, SW_SHOW);
 	UpdateWindow(mHWnd);
-	GameLog::GetInstance()->Log("[GameWindow] Initialisation Complete.", DebugChannel::Main, DebugLevel::Normal);
+	GameLog::GetInstance()->Log(DebugChannel::Main, DebugLevel::Normal, "[GameWindow] Initialisation Complete.");
 }
 
 HWND GameWindow::GetMainWHandle()

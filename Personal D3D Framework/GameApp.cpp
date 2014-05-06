@@ -37,19 +37,21 @@ void GameApp::CreateTestObjects()
 {
 	CRenderableObject* nObj = new CRenderableObject(mSceneManager->GenerateUID(),
 									mFileManager->LoadModelData("Models/Box.obj"),
-													EnVector3(-2.0f, 0.0f, 0.0f));
+													EnVector3(-4.0f, 0.0f, 0.0f));
 	mRenderer->CreateBuffer(nObj);
 	mSceneManager->RegisterEntity(nObj);
 	mPhysicsManager->RegisterEntity(nObj, ColliderType::Box, 1);
 	nObj->AddForce(EnVector3(1.0f, 0.0f, 0.0f), 250);
+	nObj->name = "Box 1";
 
 	CRenderableObject* nObj2 = new CRenderableObject(mSceneManager->GenerateUID(),
 									mFileManager->LoadModelData("Models/Box.obj"),
-													EnVector3(2.0f, 0.0f, 0.0f));
+													EnVector3(4.0f, 0.0f, 0.0f));
 	mRenderer->CreateBuffer(nObj2);
 	mSceneManager->RegisterEntity(nObj2);
 	mPhysicsManager->RegisterEntity(nObj2, ColliderType::Box, 1);
 	nObj2->AddForce(EnVector3(-1.0f, 0.0f, 0.0f), 250);
+	nObj2->name = "Box 2";
 }
 
 GameApp::~GameApp()
@@ -80,6 +82,7 @@ int GameApp::Run()
 			}
 			
 			mEventManager->Update();
+			mSceneManager->UpdateEntities();
 			mRenderer->UpdateScene(mSceneManager->activeCamera->position);
 			mRenderer->DrawScene();
 		}

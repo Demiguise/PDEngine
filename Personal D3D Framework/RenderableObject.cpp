@@ -27,5 +27,8 @@ CRenderableObject::~CRenderableObject()
 
 void CRenderableObject::Update()
 {
-	
+	if (rigidBody != 0)
+	{
+		rigidBody->ReCalculateAABB(AABB, position);
+	}
 }

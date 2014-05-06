@@ -7,6 +7,7 @@ Entity::Entity(UINT ID, EnVector3 initPos, EnVector3 initRot)
 	rotation = initRot;
 	forceAccum = EnVector3();
 	velocity = EnVector3();
+	AABB = BoundingBox();
 	rigidBody = 0;
 }
 
@@ -17,6 +18,7 @@ Entity::Entity(UINT ID, EnVector3 initPos)
 	rotation = EnVector3();
 	forceAccum = EnVector3();
 	velocity = EnVector3();
+	AABB = BoundingBox();
 	rigidBody = 0;
 }
 
@@ -27,6 +29,7 @@ Entity::Entity(UINT ID)
 	rotation = EnVector3();
 	forceAccum = EnVector3();
 	velocity = EnVector3();
+	AABB = BoundingBox();
 	rigidBody = 0;
 }
 
@@ -41,7 +44,11 @@ Entity::~Entity(void)
 
 void Entity::Update()
 {
-	
+	//Update our AABB to our current co-ordinates.
+	if (rigidBody != 0)
+	{
+		rigidBody->ReCalculateAABB(AABB, position);
+	}
 }
 
 bool Entity::OnEvent(IEvent* e)
@@ -52,4 +59,14 @@ bool Entity::OnEvent(IEvent* e)
 void Entity::AddForce(EnVector3 direction, float power)
 {
 	forceAccum += Util::ScalarProduct3D(direction, power);
+}
+
+bool Entity::TestAABBIntersection(BoundingBox& incomingAABB)
+{
+	return(	AABB.maxPoint.x > incomingAABB.minPoint.x &&
+			AABB.minPoint.x < incomingAABB.maxPoint.x &&
+			AABB.maxPoint.y > incomingAABB.minPoint.y &&
+			AABB.minPoint.y < incomingAABB.maxPoint.y &&
+			AABB.maxPoint.z > incomingAABB.minPoint.z &&
+			AABB.minPoint.z < incomingAABB.maxPoint.z);
 }

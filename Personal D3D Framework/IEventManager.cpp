@@ -14,6 +14,7 @@ IEventManager* IEventManager::GetInstance()
 
 IEventManager::IEventManager()
 {
+	GameLog::GetInstance()->Log(DebugChannel::Events, DebugLevel::None, "[EventManager] Testing Events Channel! %i", 1);
 }
 
 
@@ -84,7 +85,7 @@ void IEventManager::Update()
 		else
 		{
 			//No-one is listening for that event.
-			GameLog::GetInstance()->Log("[EventManager] No Listeners found for event.", DebugChannel::Events, DebugLevel::Warning);
+			GameLog::GetInstance()->Log(DebugChannel::Events, DebugLevel::Warning, "[EventManager] No Listeners found for event.");
 		}
 		delete mainEventQueue.front();
 		mainEventQueue.pop();

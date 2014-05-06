@@ -27,12 +27,13 @@ D3DRenderer::~D3DRenderer()
 
 bool D3DRenderer::Init()
 {
-	GameLog::GetInstance()->Log("[D3DRenderer] Beginning Initialisation.", DebugChannel::Main, DebugLevel::Normal);
+	GameLog::GetInstance()->Log(DebugChannel::Main, DebugLevel::Normal, "[D3DRenderer] Beginning Initialisation.");
+	GameLog::GetInstance()->Log(DebugChannel::Rendering, DebugLevel::None, "[D3DRenderer] Testing Rendering Channel! %i", 2);
 	if (!InitDirect3D()) { return false; }
 	InitEffects();
 	CreateInputLayer();
 	mBufferManager = new D3DBufferManager(md3dDevice);
-	GameLog::GetInstance()->Log("[D3DRenderer] Initialisation Complete.", DebugChannel::Main, DebugLevel::Normal);
+	GameLog::GetInstance()->Log(DebugChannel::Main, DebugLevel::Normal, "[D3DRenderer] Initialisation Complete.");
 	return true;
 }
 
@@ -78,12 +79,12 @@ bool D3DRenderer::InitDirect3D()
 
 	if (!md3dDevice)
 	{
-		GameLog::GetInstance()->Log("[D3DRenderer] D3DDevice creation failed.", DebugChannel::Main, DebugLevel::Normal);
+		GameLog::GetInstance()->Log(DebugChannel::Main, DebugLevel::Normal,"[D3DRenderer] D3DDevice creation failed.");
 		MessageBox(mHWnd, L"D3DDevice creation has failed.", 0, 0);
 		return false;
 	}
 	OnResize(mWindowHeight, mWindowWidth);
-	GameLog::GetInstance()->Log("[D3DRenderer] D3DDevice creation succeeded.", DebugChannel::Main, DebugLevel::Normal);
+	GameLog::GetInstance()->Log(DebugChannel::Main, DebugLevel::Normal,"[D3DRenderer] D3DDevice creation succeeded.");
 	return true;
 }
 
@@ -238,7 +239,7 @@ void D3DRenderer::DrawScene()
 		}
 	}
 
-
+	
 	mSwapChain->Present(0,0);
 }
 

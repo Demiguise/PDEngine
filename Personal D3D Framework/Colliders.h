@@ -7,27 +7,28 @@ enum ColliderType
 	Box
 };
 
-class CRigidBody
+class RigidBody
 {
 public:
-	CRigidBody(UINT initMass);
-	~CRigidBody();
+	RigidBody(UINT initMass);
+	~RigidBody();
+	virtual void ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos);
+
 	EnVector3 centrePoint;
 	bool collidable;
 	bool affectedByGravity;
 	UINT mass; //We wouldn't ever want negative mass, I shouldn't think.
 	UINT typeFlag;
+
 };
 
-//All Colliders should inherit from the CRigidBody class.
-//I'm super bad at keeping naming conventions.
-class BoxCollider : public CRigidBody
+//All Colliders should inherit from the RigidBody class.
+class BoxCollider : public RigidBody
 {
 public:
 	BoxCollider(const ModelData& model, UINT initMass);
 	~BoxCollider();
-	bool CheckForIntersection(EnVector3 pos, EnVector3 dir, EnVector3& intersectPoint);
-	
+	void ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos);
+
 	ModelData rbModel;
 };
-

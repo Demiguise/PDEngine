@@ -18,13 +18,16 @@ public:
 	virtual void Update();
 	virtual bool OnEvent(IEvent* e);
 	void AddForce(EnVector3 direction, float power);
+	bool TestAABBIntersection(BoundingBox& incomingAABB);
 
+	std::string name;
 	UINT uID;
 	EnVector3 position;
 	EnVector3 rotation;
 	EnVector3 forceAccum;
 	EnVector3 velocity;
-	CRigidBody* rigidBody;
+	RigidBody* rigidBody;
+	BoundingBox AABB;
 
 private:
 	void AddListeners();

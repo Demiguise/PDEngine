@@ -14,7 +14,7 @@ CInput* CInput::GetInstance()
 
 CInput::CInput()
 {
-	
+	GameLog::GetInstance()->Log(DebugChannel::Input, DebugLevel::None, "[InputManager] Testing Input Channel! %i", 3);
 }
 
 

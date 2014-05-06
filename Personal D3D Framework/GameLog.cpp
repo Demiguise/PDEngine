@@ -15,7 +15,7 @@ GameLog::GameLog()
 {
 	logVerbosity = 3;
 	writeToLogVerbosity = 3;
-	activeChannels = 1; //-1 turns on all bits, useful for activating all 32 channels.
+	activeChannels = DebugChannel::All;
 }
 
 GameLog::~GameLog()
@@ -24,11 +24,11 @@ GameLog::~GameLog()
 }
 
 //Always use a _SINGLE_ channel.
-void GameLog::Log(const char* logLine, const int logChannel,  const DebugLevel logLevel)
+void GameLog::Log(const int logChannel,  const DebugLevel logLevel, const char* logLine, ...)
 {
 	if (logLevel <= logVerbosity)
 	{
-		if ((activeChannels | logChannel) == activeChannels)
+		if (activeChannels&logChannel) //Bitwise AND check for proper channels
 		{
 			char buffer[512];
 			char* newLogLine = AppendNewlineChar(logLine);

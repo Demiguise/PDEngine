@@ -1,7 +1,9 @@
 #include "Colliders.h"
 
+
+
 //Base RigidBody
-CRigidBody::CRigidBody(UINT initMass)
+RigidBody::RigidBody(UINT initMass)
 {
 	typeFlag = ColliderType::Base;
 	mass = initMass;
@@ -9,15 +11,19 @@ CRigidBody::CRigidBody(UINT initMass)
 	affectedByGravity = false;
 }
 
-CRigidBody::~CRigidBody()
+RigidBody::~RigidBody()
 {
 
 }
 
+void RigidBody::ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos)
+{
+
+}
 
 //Box Collider
 BoxCollider::BoxCollider(const ModelData& model, UINT initMass)
-	: CRigidBody(initMass)
+	: RigidBody(initMass)
 {
 	typeFlag = ColliderType::Box;
 	rbModel = model;
@@ -27,7 +33,20 @@ BoxCollider::~BoxCollider()
 {
 }
 
-bool BoxCollider::CheckForIntersection(EnVector3 pos, EnVector3 dir, EnVector3& intersectPoint)
+void BoxCollider::ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos)
 {
-	return false;
+	EnVector3 curMin = EnVector3();
+	EnVector3 curMax = EnVector3();
+	for (UINT i = 0 ; i < rbModel.vData.size() ; ++i)
+	{
+		EnVector3 curVertex = rbModel.vData[i].position + curPos;
+		if (curVertex.x > curMax.x) { curMax.x = curVertex.x; }
+		if (curVertex.y > curMax.y) { curMax.y = curVertex.y; }
+		if (curVertex.z > curMax.z) { curMax.z = curVertex.z; }
+		if (curVertex.x < curMin.x) { curMin.x = curVertex.x; }
+		if (curVertex.y < curMin.y) { curMin.y = curVertex.y; }
+		if (curVertex.z < curMax.z) { curMin.z = curVertex.z; }
+	}
+	curAABB.minPoint = curMin;
+	curAABB.maxPoint = curMax;
 }

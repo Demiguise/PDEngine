@@ -4,7 +4,7 @@ PhysicsManager::PhysicsManager(const std::vector<ModelData>& colliders)
 {
 	gravAcceleration = 9.81f; //ms^-2
 	colliderModels = colliders;
-	GameLog::GetInstance()->Log("[Physics] Initialisation Complete.", DebugChannel::Main, DebugLevel::Normal);
+	GameLog::GetInstance()->Log(DebugChannel::Physics, DebugLevel::Normal, "[Physics] Initialisation Complete.");
 }
 
 PhysicsManager::~PhysicsManager()
@@ -21,7 +21,7 @@ void PhysicsManager::RegisterEntity(Entity* entity, ColliderType rbType,
 		entity->rigidBody = new BoxCollider(colliderModels[0], mass);
 		break;
 	default:
-		entity->rigidBody = new CRigidBody(mass);
+		entity->rigidBody = new RigidBody(mass);
 		break;
 	}
 }
@@ -63,7 +63,18 @@ void PhysicsManager::CollisionUpdate(float dt)
 	for (UINT i = 0 ; i < sceneCollideables.size() ; ++i)
 	{
 		curEnt = sceneCollideables[i];
-
+		for (UINT j = 0 ; j < sceneCollideables.size() ; ++j)
+		{
+			if (i != j)
+			{
+				if (curEnt->TestAABBIntersection(sceneCollideables[j]->AABB))
+				{
+					curEnt->AddForce(Util::ScalarProduct3D(curEnt->velocity, -1), 250);
+					sceneCollideables[j]->AddForce(Util::ScalarProduct3D(sceneCollideables[j]->velocity, -1), 250);
+					GameLog::GetInstance()->Log(DebugChannel::Physics, DebugLevel::Normal, "[Physics] %s has collided with %s.", curEnt->name.c_str(), sceneCollideables[j]->name.c_str());
+				}
+			}
+		}
 	}
 }
 

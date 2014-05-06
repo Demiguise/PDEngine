@@ -20,7 +20,7 @@ FileManager::FileManager()
 	{
 		logFile.close();
 		MoveAndRenameLog();
-		OutputDebugString(L"Log renamed!");
+		OutputDebugString(L"Log renamed!\n");
 	}
 }
 
@@ -144,7 +144,7 @@ ModelData FileManager::ConstructModelData(	std::vector<EnVector3> verts,
 
 void FileManager::WriteToLog(const char* message)
 {
-	logStream.open(logLocation, std::fstream::trunc | std::fstream::out);
+	logStream.open(logLocation, std::fstream::app | std::fstream::out);
 	if (logStream.fail())
 	{
 		logStream = std::fstream(logLocation, std::fstream::trunc | std::fstream::out);
@@ -170,7 +170,7 @@ void FileManager::MoveAndRenameLog()
 {
 	if (_mkdir(backupLocation) != 0)
 	{
-		OutputDebugString(L"Failed to create the backup log location");
+		OutputDebugString(L"Backup Log location likely already exists.\n");
 	}
 	char timeBuf[80];
 	GetLocalTime(timeBuf);
@@ -182,7 +182,7 @@ void FileManager::MoveAndRenameLog()
 	std::ofstream destFile(newLogLocation);
 	if (!destFile)
 	{
-		OutputDebugString(L"Couldn't create new outputfile");
+		OutputDebugString(L"Couldn't create new outputfile.\n");
 	}
 	std::ifstream originFile(logLocation);
 	destFile << originFile.rdbuf();

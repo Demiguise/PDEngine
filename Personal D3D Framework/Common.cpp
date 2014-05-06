@@ -11,6 +11,11 @@ EnVector2::~EnVector2()
 {
 }
 
+EnVector2 EnVector2::Zero()
+{
+	return EnVector2(0.0f, 0.0f);
+}
+
 EnVector2 EnVector2::Normalized()
 {
 	float mag = GetMagnitude();
@@ -62,6 +67,11 @@ EnVector3::EnVector3(const float& initX, const float& initY, const float& initZ)
 
 EnVector3::~EnVector3()
 {
+}
+
+EnVector3 EnVector3::Zero()
+{
+	return EnVector3(0.0f, 0.0f, 0.0f);
 }
 
 EnVector3 EnVector3::Normalized()

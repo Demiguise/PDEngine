@@ -7,6 +7,7 @@
 #include <string>
 #include <queue>
 
+//Common Classes
 
 class EnVector2
 {
@@ -14,12 +15,14 @@ public:
 	EnVector2();
 	EnVector2(const float& initX, const float& initY);
 	~EnVector2();
+	static EnVector2 Zero();
 	EnVector2& operator+= (const EnVector2& rhs);
 	EnVector2& operator-= (const EnVector2& rhs);
 	float x;
 	float y;
 	EnVector2 Normalized();
 	float GetMagnitude();
+
 };
 EnVector2 operator+ (EnVector2 lhs, const EnVector2& rhs);
 EnVector2 operator- (EnVector2 lhs, const EnVector2& rhs);
@@ -30,6 +33,7 @@ public:
 	EnVector3();
 	EnVector3(const float& initX, const float& initY, const float& initZ);
 	~EnVector3();
+	static EnVector3 Zero();
 	EnVector3& operator+= (const EnVector3& rhs);
 	EnVector3& operator-= (const EnVector3& rhs);
 	float x;
@@ -51,6 +55,8 @@ public:
 	bool Invert();
 };
 
+//Common Structs
+
 struct Vertex
 {
 	Vertex(){}
@@ -59,6 +65,14 @@ struct Vertex
 	EnVector3 position;
 	EnVector3 normal;
 	EnVector2 texCoords;
+};
+
+struct BoundingBox
+{
+	BoundingBox() { minPoint = EnVector3();
+					maxPoint = EnVector3(); }
+	EnVector3 minPoint;
+	EnVector3 maxPoint;
 };
 
 struct ModelData
@@ -71,6 +85,8 @@ struct ModelData
 	std::vector<UINT> iData;
 };
 
+//Common Enums
+
 enum GameKey
 {
 	W,
@@ -79,6 +95,9 @@ enum GameKey
 	D
 };
 
+//Common Namespaces
+
+//Utils namespace - Contains some needed functions for stuff. Yeah.
 namespace Util
 {
 	EnVector2 ScalarProduct2D(const EnVector2& v, const float& s);
