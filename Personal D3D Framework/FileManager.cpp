@@ -40,7 +40,7 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 	std::vector<EnVector3> lVertices;
 	std::vector<EnVector3> lNormals;
 	std::vector<EnVector2> lTexCoords;
-	std::vector<UINT> lFaces;
+	std::vector<UINT> lTris;
 	//OutputDebugString(L"Loading data from file.\n");
 	while (std::getline(ifs, line))
 	{
@@ -70,7 +70,7 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 			std::istringstream iss(CleanFaceData(line.substr(2)));
 			UINT tA, tB, tC;
 			iss >> tA; iss >> tB, iss >> tC;
-			lFaces.push_back(tA - 1); lFaces.push_back(tB - 1); lFaces.push_back(tC - 1); //I'm taking away one here because the .obj files I'm using don't start from 0, rather they start from 1.
+			lTris.push_back(tA - 1); lTris.push_back(tB - 1); lTris.push_back(tC - 1); //I'm taking away one here because the .obj files I'm using don't start from 0, rather they start from 1.
 		}
 		else
 		{
@@ -78,7 +78,7 @@ ModelData FileManager::LoadModelData(LPCSTR fileName)
 		}
 	}
 	//OutputDebugString(L"Finished reading data from file.\n");
-	ModelData newModel = ConstructModelData(lVertices, lNormals, lTexCoords, lFaces);
+	ModelData newModel = ConstructModelData(lVertices, lNormals, lTexCoords, lTris);
 	newModel.semanticName = fileName;
 	return newModel;
 }
@@ -123,7 +123,7 @@ std::vector<std::string> FileManager::SplitString(std::string line, char delim)
 ModelData FileManager::ConstructModelData(	std::vector<EnVector3> verts,
 											std::vector<EnVector3> normals,
 											std::vector<EnVector2> texCoords,
-											std::vector<UINT> faces)
+											std::vector<UINT> tris)
 {
 	ModelData newMesh;
 	if (normals.size() == 0)
@@ -138,7 +138,7 @@ ModelData FileManager::ConstructModelData(	std::vector<EnVector3> verts,
 	{
 		newMesh.vData.push_back(Vertex(verts[i], normals[i], texCoords[i]));
 	}
-	newMesh.iData = faces;
+	newMesh.iData = tris;
 	return newMesh;
 }
 

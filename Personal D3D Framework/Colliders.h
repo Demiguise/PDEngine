@@ -19,7 +19,7 @@ public:
 	bool affectedByGravity;
 	UINT mass; //We wouldn't ever want negative mass, I shouldn't think.
 	UINT typeFlag;
-
+	ModelData rbModel;
 };
 
 //All Colliders should inherit from the RigidBody class.
@@ -29,6 +29,4 @@ public:
 	BoxCollider(const ModelData& model, UINT initMass);
 	~BoxCollider();
 	void ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos);
-
-	ModelData rbModel;
 };

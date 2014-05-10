@@ -63,7 +63,15 @@ void Entity::AddForce(EnVector3 direction, float power)
 
 bool Entity::TestAABBIntersection(BoundingBox& incomingAABB)
 {
-	return(	AABB.maxPoint.x > incomingAABB.minPoint.x &&
+	//Debug Intersection code
+	//bool A =	AABB.maxPoint.x > incomingAABB.minPoint.x;
+	//bool B =	AABB.minPoint.x < incomingAABB.maxPoint.x;
+	//bool C =	AABB.maxPoint.y > incomingAABB.minPoint.y;
+	//bool D =	AABB.minPoint.y < incomingAABB.maxPoint.y;
+	//bool E =	AABB.maxPoint.z > incomingAABB.minPoint.z;
+	//bool F =	AABB.minPoint.z < incomingAABB.maxPoint.z;
+	//return false;
+	return (AABB.maxPoint.x > incomingAABB.minPoint.x &&
 			AABB.minPoint.x < incomingAABB.maxPoint.x &&
 			AABB.maxPoint.y > incomingAABB.minPoint.y &&
 			AABB.minPoint.y < incomingAABB.maxPoint.y &&

@@ -19,7 +19,7 @@ GameApp::GameApp(HINSTANCE hInstance)
 											mClientHeight, mClientWidth);
 	mSceneManager = new SceneManager(mFileManager);
 	mCamera = new Camera(mSceneManager->GenerateUID(),
-					EnVector3(30.0f, 30.0f, -30.0f));
+					EnVector3(00.0f, 0.0f, 30.0f));
 
 	std::vector<ModelData> colliders;
 	colliders.push_back(mFileManager->LoadModelData("Models/Colliders/RBCube.obj"));
@@ -31,13 +31,17 @@ GameApp::GameApp(HINSTANCE hInstance)
 	mTimer = new Timer();
 	physicsTimer = new Timer();
 	CreateTestObjects();
+
+	EnVector3 testA = EnVector3(1,1,0);
+	EnVector3 testB = EnVector3(0,1,0);
+	EnVector3 crossProduct = testA.Cross(testB);
 }
 
 void GameApp::CreateTestObjects()
 {
 	CRenderableObject* nObj = new CRenderableObject(mSceneManager->GenerateUID(),
 									mFileManager->LoadModelData("Models/Box.obj"),
-													EnVector3(-4.0f, 0.0f, 0.0f));
+													EnVector3(-4.0f, 1.0f, 0.0f));
 	mRenderer->CreateBuffer(nObj);
 	mSceneManager->RegisterEntity(nObj);
 	mPhysicsManager->RegisterEntity(nObj, ColliderType::Box, 1);
