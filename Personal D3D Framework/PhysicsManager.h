@@ -13,19 +13,30 @@ struct RayCastHit
 	EnVector3 normal;
 };
 
+struct CollisionPair
+{
+	CollisionPair() {}
+	CollisionPair(Entity* first, Entity* second)
+		: a(first), b(second) {}
+	Entity* a;
+	Entity* b;
+};
+
 class PhysicsManager
 {
 public:
 	PhysicsManager(const std::vector<ModelData>& colliders);
 	~PhysicsManager();
-	void Update(float dt);
-	void CollisionUpdate(float dt);
-	bool RayCastToEntities(EnVector3 pos, float dist, std::vector<Entity*>& testableEntities, RayCastHit& raycastOut);
+	void Update(const float& dt);
+	void CollisionUpdate(const float& dt);
+	bool CastRay(EnVector3 pos, EnVector3 dir, float dist, RayCastHit& raycastOut);
 	void RegisterEntity(Entity* entity, ColliderType rbType, UINT Mass);
 	void RemoveEntity(Entity* entity);
 	float gravAcceleration;
 
 private:
+	void ResolveCollisions(std::vector<CollisionPair>& possibleCollisions,const float& dt);
+
 	std::deque<Entity*> sceneCollideables;
 	std::vector<ModelData> colliderModels;
 };

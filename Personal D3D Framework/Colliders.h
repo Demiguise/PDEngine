@@ -17,7 +17,7 @@ public:
 	EnVector3 centrePoint;
 	bool collidable;
 	bool affectedByGravity;
-	UINT mass; //We wouldn't ever want negative mass, I shouldn't think.
+	float mass; //We wouldn't ever want negative mass, I shouldn't think.
 	UINT typeFlag;
 	ModelData rbModel;
 };

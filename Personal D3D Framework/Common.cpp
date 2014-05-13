@@ -79,21 +79,36 @@ EnVector3 EnVector3::Cross(const EnVector3& rhs)
 {
 	float lhsMag = GetMagnitude();
 	float rhsMag = rhs.GetMagnitude();
-	float algebraicDot = (x * rhs.x) + (y * rhs.y) + (z * rhs.z);
-	float sineValue = sin(acos(algebraicDot / (lhsMag * rhsMag)));
+	float sineValue = sin(FindAngleBetween(rhs));
 	EnVector3 n = EnVector3((y*rhs.z) - (z*rhs.y),
 							(z*rhs.x) - (x*rhs.z),
 							(x*rhs.y) - (y*rhs.x));
 	return Util::ScalarProduct3D(n, (lhsMag*rhsMag*sineValue));
 }
 
-EnVector3 EnVector3::Dot(const EnVector3& rhs)
+float EnVector3::FindAngleBetween(const EnVector3& rhs)
+{
+	float lhsMag = GetMagnitude();
+	float rhsMag = rhs.GetMagnitude();
+	float dotProduct = ADot(rhs);
+	return acos(dotProduct/(lhsMag * rhsMag));
+}
+
+ //Geometric Dot product - Returns new Vector
+EnVector3 EnVector3::GDot(const EnVector3& rhs) 
 {
 	float rX = x * rhs.x;
 	float rY = y * rhs.y;
 	float rZ = z * rhs.z;
 	return EnVector3(rX, rY, rZ);
 }
+
+//Algebraic Dot product - Returns scalar value
+float EnVector3::ADot(const EnVector3& rhs)
+{
+	return (x * rhs.x) + (y * rhs.y) + (z * rhs.z);
+}
+
 
 EnVector3 EnVector3::MatrixMult3x3(const EnMatrix3x3& rhs)
 {
@@ -176,7 +191,7 @@ EnMatrix2x2::EnMatrix2x2()
 {
 }
 
-EnMatrix2x2::EnMatrix2x2(EnVector2 r1, EnVector2 r2)
+EnMatrix2x2::EnMatrix2x2(const EnVector2& r1, const EnVector2& r2)
 {
 	r[0] = r1;
 	r[1] = r2;
@@ -202,7 +217,7 @@ EnMatrix3x3::EnMatrix3x3()
 {
 }
 
-EnMatrix3x3::EnMatrix3x3(EnVector3 r1, EnVector3 r2, EnVector3 r3)
+EnMatrix3x3::EnMatrix3x3(const EnVector3& r1, const EnVector3& r2, const EnVector3& r3)
 {
 	r[0] = r1;
 	r[1] = r2;
@@ -220,7 +235,7 @@ bool EnMatrix3x3::Invert()
 	EnMatrix2x2 minorMatrix;
 	float determinant = GetDeterminant();
 	if (determinant == 0) { return false; }
-	else //I bet there is a nicer way to do this, not just now though.
+	else
 	{
 		//Create new matrix containing determinants of each minor matrix.
 		for (UINT i = 0 ; i < 3 ; ++i)
@@ -293,6 +308,15 @@ namespace Util
 		float z = v.z * s;
 		return EnVector3(x, y, z);
 	}
+
+	EnVector3 ScalarDivision3D(const EnVector3& v, const float& s)
+	{
+		float x = v.x / s;
+		float y = v.y / s;
+		float z = v.z / s;
+		return EnVector3(x, y, z);
+	}
+
 	EnMatrix3x3 ScalarProduct3x3(const EnMatrix3x3& m, const float& s)
 	{
 		EnMatrix3x3 newMatrix;

@@ -43,7 +43,8 @@ public:
 	EnVector3(const float& initX, const float& initY, const float& initZ);
 	~EnVector3();
 	static EnVector3 Zero();
-	EnVector3 Dot(const EnVector3& rhs);
+	EnVector3 GDot(const EnVector3& rhs); //Geometric Dot product - Returns new Vector
+	float ADot(const EnVector3& rhs); //Algebraic Dot product - Returns scalar value
 	EnVector3 Cross(const EnVector3& rhs);
 	EnVector3 MatrixMult3x3(const EnMatrix3x3& rhs);
 	EnVector3 Normalized();
@@ -63,7 +64,7 @@ class EnMatrix2x2
 {
 public:
 	EnMatrix2x2();
-	EnMatrix2x2(EnVector2 r1, EnVector2 r2);
+	EnMatrix2x2(const EnVector2& r1, const EnVector2& r2);
 	~EnMatrix2x2();
 	EnVector2 r[2];
 	float GetDeterminant();
@@ -73,8 +74,20 @@ class EnMatrix3x3
 {
 public:
 	EnMatrix3x3();
-	EnMatrix3x3(EnVector3 r1, EnVector3 r2, EnVector3 r3);
+	EnMatrix3x3(const EnVector3& r1, const EnVector3& r2, const EnVector3& r3);
 	~EnMatrix3x3();
+	EnVector3 r[3];
+	EnMatrix2x2 CreateMinor(const int& row, const int& column);
+	bool Invert();
+	float GetDeterminant();
+};
+
+class EnMatrix4x4
+{
+public:
+	EnMatrix4x4();
+	EnMatrix4x4(const EnVector3& r1,const EnVector3& r2,const EnVector3& r3,const EnVector3& r4);
+	~EnMatrix4x4();
 	EnVector3 r[3];
 	EnMatrix2x2 CreateMinor(const int& row, const int& column);
 	bool Invert();
@@ -128,6 +141,7 @@ namespace Util
 {
 	EnVector2 ScalarProduct2D(const EnVector2& v, const float& s);
 	EnVector3 ScalarProduct3D(const EnVector3& v, const float& s);
+	EnVector3 ScalarDivision3D(const EnVector3& v, const float& s);
 	EnMatrix3x3 ScalarProduct3x3(const EnMatrix3x3&m, const float& s);
 
 	template<class T> void SwapValues(T& a, T& b);
