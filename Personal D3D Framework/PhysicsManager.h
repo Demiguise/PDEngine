@@ -1,4 +1,5 @@
 #pragma once
+#include "Colliders.h"
 #include "Entity.h"
 #include "Common.h"
 
@@ -17,10 +18,13 @@ struct CollisionPair
 {
 	CollisionPair() {}
 	CollisionPair(Entity* first, Entity* second)
-		: a(first), b(second) {}
+		: a(first), b(second), data(0) {}
+	~CollisionPair() { if (data != 0) { delete data; } }
 	Entity* a;
 	Entity* b;
+	CollisionData* data;
 };
+
 
 class PhysicsManager
 {
@@ -36,6 +40,8 @@ public:
 
 private:
 	void ResolveCollisions(std::vector<CollisionPair>& possibleCollisions,const float& dt);
+	std::vector<CollisionPair> CoarseCollisionDetection(const std::deque<Entity*>& availableCollideables);
+	void GenerateContacts(std::vector<CollisionPair>& coarseCollisions);
 
 	std::deque<Entity*> sceneCollideables;
 	std::vector<ModelData> colliderModels;

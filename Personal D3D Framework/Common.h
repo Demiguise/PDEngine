@@ -45,6 +45,7 @@ public:
 	static EnVector3 Zero();
 	EnVector3 GDot(const EnVector3& rhs); //Geometric Dot product - Returns new Vector
 	float ADot(const EnVector3& rhs); //Algebraic Dot product - Returns scalar value
+	float FindAngleBetween(const EnVector3& rhs);
 	EnVector3 Cross(const EnVector3& rhs);
 	EnVector3 MatrixMult3x3(const EnMatrix3x3& rhs);
 	EnVector3 Normalized();
