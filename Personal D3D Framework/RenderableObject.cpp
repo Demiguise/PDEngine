@@ -29,6 +29,6 @@ void CRenderableObject::Update()
 {
 	if (rigidBody != 0)
 	{
-		rigidBody->ReCalculateAABB(AABB, position);
+		rigidBody->ReCalculateAABB(AABB);
 	}
 }

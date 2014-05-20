@@ -1,8 +1,10 @@
 #pragma once
 #include "Common.h"
+#include "Entity.h"
 
 //Forward Declarations
 
+class Entity;
 class RigidBody;
 class BoxCollider;
 class SphereCollider;
@@ -38,13 +40,15 @@ struct CollisionData
 class RigidBody
 {
 public:
-	RigidBody(float initMass);
+	RigidBody(float initMass, Entity* parentEnt);
 	~RigidBody();
-	virtual void ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos);
+	virtual void ReCalculateAABB(BoundingBox& curAABB);
 
 	virtual CollisionData* GenerateContacts(RigidBody* contactingBody);
 
+	Entity* parent;
 	EnVector3 centrePoint;
+	
 	bool collidable;
 	bool affectedByGravity;
 	float mass;
@@ -57,19 +61,20 @@ public:
 class BoxCollider : public RigidBody
 {
 public:
-	BoxCollider(const ModelData& model, float initMass);
+	BoxCollider(const ModelData& model, float initMass, Entity* parentEnt);
 	~BoxCollider();
-	void ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos);
+	void ReCalculateAABB(BoundingBox& curAABB);
 	float extents;
 	CollisionData* GenerateContacts(RigidBody* contactingBody);
+	EnVector3 halfExtents;
 };
 
 class SphereCollider : public RigidBody
 {
 public:
-	SphereCollider(const ModelData& model, float initMass);
+	SphereCollider(const ModelData& model, float initMass, Entity* parentEnt);
 	~SphereCollider();
-	void ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos);
+	void ReCalculateAABB(BoundingBox& curAABB);
 	float radius;
 	CollisionData* GenerateContacts(RigidBody* contactingBody);
 };
@@ -88,7 +93,10 @@ namespace CollisionDetectors
 							const SphereCollider* b,
 							std::vector<Contact*>& data);
 
-	bool HyperspaceSeperationTest(	const RigidBody* a,
-									const RigidBody* b,
+	bool HyperspaceSeperationTest(	const BoxCollider* a,
+									const BoxCollider* b,
 									const EnVector3& axis);
+
+	float ProjectToAxis(const BoxCollider* a,
+						const EnVector3& axis);
 }

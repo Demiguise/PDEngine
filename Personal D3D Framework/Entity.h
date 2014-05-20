@@ -6,7 +6,8 @@
 #include "GameLog.h"
 
 class IEventManager;
-class CRigidBody;
+class RigidBody;
+
 
 class Entity
 {
@@ -14,7 +15,7 @@ public:
 	Entity(UINT uID, EnVector3 initPos, EnVector3 initRot);
 	Entity(UINT uID, EnVector3 initPos);
 	Entity(UINT ID);
-	~Entity(void);
+	~Entity();
 	virtual void Update();
 	virtual bool OnEvent(IEvent* e);
 	void AddForce(EnVector3 direction, float power);
@@ -24,6 +25,8 @@ public:
 	UINT uID;
 	EnVector3 position;
 	EnVector3 rotation;
+	EnMatrix4x4 localToWorld;
+	EnVector4 quaternion;
 	EnVector3 forceAccum;
 	EnVector3 velocity;
 	RigidBody* rigidBody;

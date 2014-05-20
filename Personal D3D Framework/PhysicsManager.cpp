@@ -18,10 +18,10 @@ void PhysicsManager::RegisterEntity(Entity* entity, ColliderType rbType,
 	switch (rbType)
 	{
 	case ColliderType::Box:
-		entity->rigidBody = new BoxCollider(colliderModels[0], mass);
+		entity->rigidBody = new BoxCollider(colliderModels[0], mass, entity);
 		break;
 	default:
-		entity->rigidBody = new RigidBody(mass);
+		entity->rigidBody = new RigidBody(mass, entity);
 		break;
 	}
 }

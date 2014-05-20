@@ -1,5 +1,50 @@
 #include "Common.h"
 
+//======== Quaternion (For Rotations)
+// A Quaternion is made up of four parts, 1 scalar and a 3D vector.
+// The vector is often written as (i, j, k) to denote the imaginary numbers that it uses.
+// However, to get the usefulness of the already present 3D vectors, I'll call them (x, y, z).
+// That is, unless someone can think of a reason not to...
+
+
+Quaternion::Quaternion()
+	: scalar(1), vector(EnVector3::Zero()) {}
+
+Quaternion::Quaternion(const float& initS, const EnVector3& initVector)
+	: scalar(initS), vector(initVector) {}
+
+Quaternion::Quaternion(const float& initS, const float& initX, const float& initY, const float& initZ)
+	: scalar(initS), vector(initX, initY, initZ) {}
+
+Quaternion::~Quaternion() {}
+
+Quaternion Quaternion::Normalized()
+{
+	float d = (scalar*scalar) + vector.GetMagnitude();
+	if (d == 0)
+	{
+		return Quaternion();
+	}
+	return Quaternion((scalar/d), (vector.x/d), (vector.y/d), (vector.z/d));
+}
+
+//Member operators
+Quaternion& Quaternion::operator*= (const Quaternion& rhs)
+{
+	scalar =  scalar * rhs.scalar - vector.ADot(rhs.vector);
+	vector = EnVector3(	Util::ScalarProduct3D(rhs.vector, scalar) +
+						Util::ScalarProduct3D(vector, rhs.scalar) +
+						vector.Cross(rhs.vector));
+	return *this;
+}
+
+
+//Non-Member operators
+Quaternion operator* (Quaternion lhs, const Quaternion& rhs)
+{
+	lhs *= rhs;
+	return lhs;
+}
 
 //======== Engine Vector2 (Aka, 2 dimensional vector)
 EnVector2::EnVector2()
@@ -112,9 +157,9 @@ float EnVector3::ADot(const EnVector3& rhs)
 
 EnVector3 EnVector3::MatrixMult3x3(const EnMatrix3x3& rhs)
 {
-	return EnVector3((rhs.r[0].x * x) + (rhs.r[0].y * y) + (rhs.r[0].z * z),
-					(rhs.r[1].x * x) + (rhs.r[1].y * y) + (rhs.r[1].z * z),
-					(rhs.r[2].x * x) + (rhs.r[2].y * y) + (rhs.r[2].z * z));
+	return EnVector3((rhs.c[0].x * x) + (rhs.c[0].y * y) + (rhs.c[0].z * z),
+					(rhs.c[1].x * x) + (rhs.c[1].y * y) + (rhs.c[1].z * z),
+					(rhs.c[2].x * x) + (rhs.c[2].y * y) + (rhs.c[2].z * z));
 }
 
 EnVector3 EnVector3::Normalized()
@@ -182,50 +227,108 @@ EnVector3 operator+ (EnVector3 lhs, const EnVector3& rhs)
 	return lhs;
 }
 
-//======== Engine Matrix3x3
-//	In the Form:
-//	Row 0 | A B |
-//	Row 1 | C D |
-//	Where A = Row 0.x, B = Row 0.y, etc;
-EnMatrix2x2::EnMatrix2x2()
+
+//======== Engine Vector4 (Aka, 4 dimensional vector)
+EnVector4::EnVector4()
+	: x(0), y(0), z(0), w(0) {}
+
+EnVector4::EnVector4(const float& initX, const float& initY, const float& initZ, const float& initW)
+{
+	x = initX;
+	y = initY;
+	z = initZ;
+	w = initW;
+}
+
+EnVector4::~EnVector4()
 {
 }
 
-EnMatrix2x2::EnMatrix2x2(const EnVector2& r1, const EnVector2& r2)
+EnVector4 EnVector4::Zero()
 {
-	r[0] = r1;
-	r[1] = r2;
+	return EnVector4(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
+EnVector4 EnVector4::Normalized()
+{
+	float mag = GetMagnitude();
+	if (mag == 0) { return EnVector4(); }
+	return EnVector4((x/mag), (y/mag), (z/mag), (w/mag));
+}
+
+float EnVector4::GetMagnitude() const
+{
+	float a = x * x;
+	float b = y * y;
+	float c = z * z;
+	float d = w * w;
+	return sqrt(a+b+c+d);
+}
+
+//======== Engine Matrix2x2
+//	In the Form:
+//	| A B |
+//	| C D |
+//	Where each column is a 2D Vector. Eg (A,C) & (B,D)
+EnMatrix2x2::EnMatrix2x2()
+{
+	//Init into Identity Matrix;
+	c[0] = EnVector2(1.0f, 0.0f);
+	c[1] = EnVector2(0.0f, 1.0f);
+}
+
+EnMatrix2x2::EnMatrix2x2(const EnVector2& c1, const EnVector2& c2)
+{
+	c[0] = c1;
+	c[1] = c2;
 }
 
 EnMatrix2x2::~EnMatrix2x2()
 {
 }
 
+EnMatrix2x2 EnMatrix2x2::Identity()
+{
+	return EnMatrix2x2(	EnVector2(1.0f, 0.0f),
+						EnVector2(0.0f, 1.0f));
+}
+
 float EnMatrix2x2::GetDeterminant()
 {
-	return	(r[0].x * r[1].y) -
-			(r[0].y * r[1].x);
+	return	(c[0].x * c[1].y) -
+			(c[0].y * c[1].x);
 }
 
-//======== Engine Matrix3x3
+//	Engine Matrix3x3
 //	In the Form:
-//	Row 0 | A B C |
-//	Row 1 | D E F |
-//	Row 2 | G H I |
-//	Where A = Row 0.x, B = Row 0.y, C = Row 0.z, etc.
+//	| A B C |
+//	| D E F |
+//	| G H I |
+//	Where each column is a 3D Vector. Eg (A,D,G), (B,E,H), (C,F,I)
 EnMatrix3x3::EnMatrix3x3()
 {
+	//Init into Identity Matrix;
+	c[0] = EnVector3(1.0f, 0.0f, 0.0f);
+	c[1] = EnVector3(0.0f, 1.0f, 0.0f);
+	c[2] = EnVector3(0.0f, 0.0f, 1.0f);
 }
 
-EnMatrix3x3::EnMatrix3x3(const EnVector3& r1, const EnVector3& r2, const EnVector3& r3)
+EnMatrix3x3::EnMatrix3x3(const EnVector3& c1, const EnVector3& c2, const EnVector3& c3)
 {
-	r[0] = r1;
-	r[1] = r2;
-	r[2] = r3;
+	c[0] = c1;
+	c[1] = c2;
+	c[2] = c3;
 }
 
 EnMatrix3x3::~EnMatrix3x3()
 {
+}
+
+EnMatrix3x3 EnMatrix3x3::Identity()
+{
+	return EnMatrix3x3(	EnVector3(1.0f, 0.0f, 0.0f),
+						EnVector3(0.0f, 1.0f, 0.0f),
+						EnVector3(0.0f, 0.0f, 1.0f));
 }
 
 // Will NOT overwrite the matrix if returns false. 
@@ -244,21 +347,26 @@ bool EnMatrix3x3::Invert()
 			{
 				minorMatrix = CreateMinor(i, j);
 				// +2 here as I'm working from a zero index. Can't really be doing 0+0 as a power.
-				cofactorMatrix.r[i][j] = pow(-1, (i + j + 2)) * minorMatrix.GetDeterminant();
+				cofactorMatrix.c[i][j] = pow(-1, (i + j + 2)) * minorMatrix.GetDeterminant();
 			}
 		}
 		//Now to flip the Matrix along the left->right diagonal.
-		Util::SwapValues(cofactorMatrix.r[1][0], cofactorMatrix.r[0][1]);
-		Util::SwapValues(cofactorMatrix.r[2][0], cofactorMatrix.r[0][2]);
-		Util::SwapValues(cofactorMatrix.r[2][1], cofactorMatrix.r[1][2]);
+		cofactorMatrix.Transpose();
 	};
 	//Finally, multiply the cofactor matrix by the reciprocal of the determinant
 	//to get the inverse matrix!
 	for (UINT i = 0 ; i < 3 ; ++i)
 	{
-		r[i] = Util::ScalarProduct3D(cofactorMatrix.r[i], 1/determinant);
+		c[i] = Util::ScalarProduct3D(cofactorMatrix.c[i], 1/determinant);
 	}
 	return true;
+}
+
+void EnMatrix3x3::Transpose()
+{
+	Util::SwapValues(c[1][0], c[0][1]);
+	Util::SwapValues(c[2][0], c[0][2]);
+	Util::SwapValues(c[2][1], c[1][2]);
 }
 
 EnMatrix2x2 EnMatrix3x3::CreateMinor(const int& row, const int& column)
@@ -272,7 +380,7 @@ EnMatrix2x2 EnMatrix3x3::CreateMinor(const int& row, const int& column)
 			{
 				if (j != column)
 				{
-					tempVector.push_back(r[i][j]);
+					tempVector.push_back(c[i][j]);
 				}
 			}
 		}
@@ -283,12 +391,49 @@ EnMatrix2x2 EnMatrix3x3::CreateMinor(const int& row, const int& column)
 
 float EnMatrix3x3::GetDeterminant()
 {
-	return	(r[0].x * r[1].y * r[2].z) +	//AEI
-			(r[0].y * r[1].z * r[2].x) +	//BFG
-			(r[0].z * r[1].x * r[2].y) -	//CDH
-			(r[0].x * r[1].z * r[2].y) -	//AFH
-			(r[0].y * r[1].x * r[2].z) -	//BFI
-			(r[0].z * r[1].y * r[2].x);		//CEG
+	return	(c[0].x * c[1].y * c[2].z) +	//AEI
+			(c[0].y * c[1].z * c[2].x) +	//BFG
+			(c[0].z * c[1].x * c[2].y) -	//CDH
+			(c[0].x * c[1].z * c[2].y) -	//AFH
+			(c[0].y * c[1].x * c[2].z) -	//BFI
+			(c[0].z * c[1].y * c[2].x);		//CEG
+}
+
+//======== Engine Matrix4x4
+//	In the Form:
+//	| A B C D |
+//	| E F G H |
+//	| I J K L |
+//	| M N O P |
+//	Where each column is a 4D vector. Eg (A,E,I,M), (B,F,J,N)... etc
+EnMatrix4x4::EnMatrix4x4()
+{
+	//Init into Identity Matrix;
+	c[0] = EnVector4(1.0f, 0.0f, 0.0f, 0.0f);
+	c[1] = EnVector4(0.0f, 1.0f, 0.0f, 0.0f);
+	c[2] = EnVector4(0.0f, 0.0f, 1.0f, 0.0f);
+	c[3] = EnVector4(0.0f, 0.0f, 0.0f, 1.0f);
+	
+}
+
+EnMatrix4x4::EnMatrix4x4(const EnVector4& c1, const EnVector4& c2, const EnVector4& c3, const EnVector4& c4)
+{
+	c[0] = c1;
+	c[1] = c2;
+	c[2] = c3;
+	c[3] = c4;
+}
+
+EnMatrix4x4::~EnMatrix4x4()
+{
+}
+
+EnMatrix4x4 EnMatrix4x4::Identity()
+{
+	return EnMatrix4x4(	EnVector4(1.0f, 0.0f, 0.0f, 0.0f),
+						EnVector4(0.0f, 1.0f, 0.0f, 0.0f),
+						EnVector4(0.0f, 0.0f, 1.0f, 0.0f),
+						EnVector4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 // Utilities that I might find useful
@@ -322,9 +467,9 @@ namespace Util
 		EnMatrix3x3 newMatrix;
 		for(int i = 0 ; i < 3 ; ++i)
 		{
-			newMatrix.r[i].x = m.r[i].x * s;
-			newMatrix.r[i].y = m.r[i].y * s;
-			newMatrix.r[i].z = m.r[i].z * s;
+			newMatrix.c[i].x = m.c[i].x * s;
+			newMatrix.c[i].y = m.c[i].y * s;
+			newMatrix.c[i].z = m.c[i].z * s;
 		}
 		return newMatrix;
 	}

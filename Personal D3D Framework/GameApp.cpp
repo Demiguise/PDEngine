@@ -31,10 +31,6 @@ GameApp::GameApp(HINSTANCE hInstance)
 	mTimer = new Timer();
 	physicsTimer = new Timer();
 	CreateTestObjects();
-
-	EnVector3 testA = EnVector3(1,1,0);
-	EnVector3 testB = EnVector3(0,1,0);
-	EnVector3 crossProduct = testA.Cross(testB);
 }
 
 void GameApp::CreateTestObjects()

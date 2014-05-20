@@ -3,12 +3,13 @@
 
 
 //Base RigidBody
-RigidBody::RigidBody(float initMass)
+RigidBody::RigidBody(float initMass, Entity* parentEnt)
 {
 	typeFlag = ColliderType::Base;
 	mass = initMass;
 	collidable = true;
 	affectedByGravity = false;
+	parent = parentEnt;
 }
 
 RigidBody::~RigidBody()
@@ -16,7 +17,7 @@ RigidBody::~RigidBody()
 
 }
 
-void RigidBody::ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos)
+void RigidBody::ReCalculateAABB(BoundingBox& curAABB)
 {
 
 }
@@ -28,8 +29,8 @@ CollisionData* RigidBody::GenerateContacts(RigidBody* contactingBody)
 
 
 //Box Collider
-BoxCollider::BoxCollider(const ModelData& model, float initMass)
-	: RigidBody(initMass)
+BoxCollider::BoxCollider(const ModelData& model, float initMass, Entity* parentEnt)
+	: RigidBody(initMass, parentEnt)
 {
 	typeFlag = ColliderType::Box;
 	rbModel = model;
@@ -39,14 +40,13 @@ BoxCollider::~BoxCollider()
 {
 }
 
-void BoxCollider::ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos)
+void BoxCollider::ReCalculateAABB(BoundingBox& curAABB)
 {
-	centrePoint = curPos;
-	EnVector3 curMin = rbModel.vData[0].position + curPos;
-	EnVector3 curMax = rbModel.vData[0].position + curPos;
+	EnVector3 curMin = rbModel.vData[0].position + parent->position;
+	EnVector3 curMax = rbModel.vData[0].position + parent->position;
 	for (UINT i = 1 ; i < rbModel.vData.size() ; ++i)
 	{
-		EnVector3 curVertex = rbModel.vData[i].position + curPos;
+		EnVector3 curVertex = rbModel.vData[i].position + parent->position;
 		if (curVertex.x > curMax.x) { curMax.x = curVertex.x; }
 		if (curVertex.y > curMax.y) { curMax.y = curVertex.y; }
 		if (curVertex.z > curMax.z) { curMax.z = curVertex.z; }
@@ -56,6 +56,7 @@ void BoxCollider::ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos)
 	}
 	curAABB.minPoint = curMin;
 	curAABB.maxPoint = curMax;
+	halfExtents = Util::ScalarProduct3D((curMin - curMax), 0.5f);
 }
 
 //Contact Generation
@@ -86,8 +87,8 @@ CollisionData* BoxCollider::GenerateContacts(RigidBody* contactingBody)
 }
 
 //Sphere Collider
-SphereCollider::SphereCollider(const ModelData& model, float initMass)
-	: RigidBody(initMass)
+SphereCollider::SphereCollider(const ModelData& model, float initMass, Entity* parentEnt)
+	: RigidBody(initMass, parentEnt)
 {
 	typeFlag = ColliderType::Sphere;
 	rbModel = model;
@@ -98,9 +99,9 @@ SphereCollider::~SphereCollider()
 
 }
 
-void SphereCollider::ReCalculateAABB(BoundingBox& curAABB, EnVector3 curPos)
+void SphereCollider::ReCalculateAABB(BoundingBox& curAABB)
 {
-	centrePoint = curPos;
+	
 }
 
 //Contact Generation
@@ -167,10 +168,16 @@ namespace CollisionDetectors
 		return true;
 	}
 
-	bool HyperspaceSeperationTest(	const RigidBody* a,
-									const RigidBody* b,
+	bool HyperspaceSeperationTest(	const BoxCollider* a,
+									const BoxCollider* b,
 									const EnVector3& axis)
 	{
 		return false;
+	}
+
+	float ProjectToAxis(const BoxCollider* a,
+						const EnVector3& axis)
+	{
+		return 0.0f;
 	}
 }

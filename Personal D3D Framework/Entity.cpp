@@ -5,8 +5,8 @@ Entity::Entity(UINT ID, EnVector3 initPos, EnVector3 initRot)
 	uID = ID;
 	position = initPos;
 	rotation = initRot;
-	forceAccum = EnVector3();
-	velocity = EnVector3();
+	forceAccum = EnVector3::Zero();
+	velocity = EnVector3::Zero();
 	AABB = BoundingBox();
 	rigidBody = 0;
 }
@@ -15,9 +15,9 @@ Entity::Entity(UINT ID, EnVector3 initPos)
 {
 	uID = ID;
 	position = initPos;
-	rotation = EnVector3();
-	forceAccum = EnVector3();
-	velocity = EnVector3();
+	rotation = EnVector3::Zero();
+	forceAccum = EnVector3::Zero();
+	velocity = EnVector3::Zero();
 	AABB = BoundingBox();
 	rigidBody = 0;
 }
@@ -25,15 +25,15 @@ Entity::Entity(UINT ID, EnVector3 initPos)
 Entity::Entity(UINT ID)
 {
 	uID = ID;
-	position = EnVector3();
-	rotation = EnVector3();
-	forceAccum = EnVector3();
-	velocity = EnVector3();
+	position = EnVector3::Zero();
+	rotation = EnVector3::Zero();
+	forceAccum = EnVector3::Zero();
+	velocity = EnVector3::Zero();
 	AABB = BoundingBox();
 	rigidBody = 0;
 }
 
-Entity::~Entity(void)
+Entity::~Entity()
 {
 	IEventManager* eventMan = IEventManager::GetInstance();
 	eventMan->RemoveAllListenersFromEnt(this);
@@ -47,7 +47,7 @@ void Entity::Update()
 	//Update our AABB to our current co-ordinates.
 	if (rigidBody != 0)
 	{
-		rigidBody->ReCalculateAABB(AABB, position);
+		rigidBody->ReCalculateAABB(AABB);
 	}
 }
 
