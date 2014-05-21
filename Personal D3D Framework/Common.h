@@ -9,6 +9,8 @@
 #include <cmath>
 #include <assert.h>
 
+#define PI 3.14159265f
+
 //Forward Declarations
 class Quaternion;
 class EnVector2;
@@ -73,11 +75,16 @@ public:
 	EnVector4 Normalized();
 	float GetMagnitude() const;
 
+	EnVector4& operator+= (const EnVector4& rhs);
+	EnVector4& operator-= (const EnVector4& rhs);
+	float& operator[] (int index);
 	float x;
 	float y;
 	float z;
 	float w;
 };
+EnVector4 operator+ (EnVector4 lhs, const EnVector4& rhs);
+EnVector4 operator- (EnVector4 lhs, const EnVector4& rhs);
 
 class EnMatrix2x2
 {
@@ -118,10 +125,11 @@ class Quaternion
 {
 public:
 	Quaternion();
-	Quaternion(const float& initS, const EnVector3& initVector);
+	Quaternion(const float& angle, const EnVector3& axis);
 	Quaternion(const float& initS, const float& initI, const float& initJ, const float& initK);
 	~Quaternion();
 	Quaternion Normalized();
+	EnMatrix3x3 To3x3Matrix();
 	float scalar;
 	EnVector3 vector;
 	Quaternion& operator*= (const Quaternion& rhs);
@@ -174,12 +182,14 @@ enum GameKey
 namespace Util
 {
 	EnVector2 ScalarProduct2D(const EnVector2& v, const float& s);
+	EnVector2 ScalarDivision2D(const EnVector2& v, const float& s);
 	EnVector3 ScalarProduct3D(const EnVector3& v, const float& s);
 	EnVector3 ScalarDivision3D(const EnVector3& v, const float& s);
 	EnMatrix3x3 ScalarProduct3x3(const EnMatrix3x3&m, const float& s);
 
 	template<class T> void SwapValues(T& a, T& b);
-
+	float DegreesToRadians(const float& d);
+	float RadiansToDegrees(const float& r);
 };
 
 

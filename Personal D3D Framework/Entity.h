@@ -26,7 +26,7 @@ public:
 	EnVector3 position;
 	EnVector3 rotation;
 	EnMatrix4x4 localToWorld;
-	EnVector4 quaternion;
+	Quaternion quaternion;
 	EnVector3 forceAccum;
 	EnVector3 velocity;
 	RigidBody* rigidBody;
@@ -35,5 +35,7 @@ public:
 private:
 	void AddListeners();
 	void RemoveListener(std::string eventType);
+	void UpdateLocalToWorldMatrix();
+	void UpdateQuaternion();
 };
 

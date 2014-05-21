@@ -1,50 +1,5 @@
 #include "Common.h"
 
-//======== Quaternion (For Rotations)
-// A Quaternion is made up of four parts, 1 scalar and a 3D vector.
-// The vector is often written as (i, j, k) to denote the imaginary numbers that it uses.
-// However, to get the usefulness of the already present 3D vectors, I'll call them (x, y, z).
-// That is, unless someone can think of a reason not to...
-
-
-Quaternion::Quaternion()
-	: scalar(1), vector(EnVector3::Zero()) {}
-
-Quaternion::Quaternion(const float& initS, const EnVector3& initVector)
-	: scalar(initS), vector(initVector) {}
-
-Quaternion::Quaternion(const float& initS, const float& initX, const float& initY, const float& initZ)
-	: scalar(initS), vector(initX, initY, initZ) {}
-
-Quaternion::~Quaternion() {}
-
-Quaternion Quaternion::Normalized()
-{
-	float d = (scalar*scalar) + vector.GetMagnitude();
-	if (d == 0)
-	{
-		return Quaternion();
-	}
-	return Quaternion((scalar/d), (vector.x/d), (vector.y/d), (vector.z/d));
-}
-
-//Member operators
-Quaternion& Quaternion::operator*= (const Quaternion& rhs)
-{
-	scalar =  scalar * rhs.scalar - vector.ADot(rhs.vector);
-	vector = EnVector3(	Util::ScalarProduct3D(rhs.vector, scalar) +
-						Util::ScalarProduct3D(vector, rhs.scalar) +
-						vector.Cross(rhs.vector));
-	return *this;
-}
-
-
-//Non-Member operators
-Quaternion operator* (Quaternion lhs, const Quaternion& rhs)
-{
-	lhs *= rhs;
-	return lhs;
-}
 
 //======== Engine Vector2 (Aka, 2 dimensional vector)
 EnVector2::EnVector2()
@@ -128,13 +83,15 @@ EnVector3 EnVector3::Cross(const EnVector3& rhs)
 	EnVector3 n = EnVector3((y*rhs.z) - (z*rhs.y),
 							(z*rhs.x) - (x*rhs.z),
 							(x*rhs.y) - (y*rhs.x));
-	return Util::ScalarProduct3D(n, (lhsMag*rhsMag*sineValue));
+	return Util::ScalarProduct3D(n.Normalized(), (lhsMag*rhsMag*sineValue));
 }
 
+//Returns Radians (Via the _CMATH_::acos function)
 float EnVector3::FindAngleBetween(const EnVector3& rhs)
 {
 	float lhsMag = GetMagnitude();
 	float rhsMag = rhs.GetMagnitude();
+	if ((lhsMag == 0) || (rhsMag == 0)) { return 0; }
 	float dotProduct = ADot(rhs);
 	return acos(dotProduct/(lhsMag * rhsMag));
 }
@@ -263,6 +220,59 @@ float EnVector4::GetMagnitude() const
 	float c = z * z;
 	float d = w * w;
 	return sqrt(a+b+c+d);
+}
+
+//Member operators
+
+float& EnVector4::operator[] (int index)
+{
+	assert ((index <= 3) && (index >= 0));
+	switch (index)
+	{
+	case 0:
+		return x;
+		break;
+	case 1:
+		return y;
+		break;
+	case 2:
+		return z;
+		break;
+	case 3:
+		return w;
+		break;
+	}
+}
+
+EnVector4& EnVector4::operator+= (const EnVector4& rhs)
+{
+	x = x + rhs.x;
+	y = y + rhs.y;
+	z = z + rhs.z;
+	w = w + rhs.w;
+	return *this;
+}
+
+EnVector4& EnVector4::operator-= (const EnVector4& rhs)
+{
+	x = x - rhs.x;
+	y = y - rhs.y;
+	z = z - rhs.z;
+	w = w - rhs.w;
+	return *this;
+}
+
+//Non-member operators
+EnVector4 operator- (EnVector4 lhs, const EnVector4& rhs)
+{
+	lhs -= rhs;
+	return lhs;
+}
+
+EnVector4 operator+ (EnVector4 lhs, const EnVector4& rhs)
+{
+	lhs += rhs;
+	return lhs;
 }
 
 //======== Engine Matrix2x2
@@ -436,6 +446,76 @@ EnMatrix4x4 EnMatrix4x4::Identity()
 						EnVector4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
+//======== Quaternion (For Rotations)
+// A Quaternion is made up of four parts, 1 scalar and a 3D vector.
+// The vector is often written as (i, j, k) to denote the imaginary numbers that it uses.
+// However, to get the usefulness of the already present 3D vectors, I'll call them (x, y, z).
+// That is, unless someone can think of a reason not to...
+
+Quaternion::Quaternion()
+	: scalar(1), vector(EnVector3::Zero()) {}
+
+Quaternion::Quaternion(const float& angle, const EnVector3& axis)
+{
+	float halfAngle = Util::DegreesToRadians(angle)/2.0f;
+	scalar = cos(halfAngle);
+	vector = EnVector3 ((axis.x * sin(halfAngle)), (axis.y * sin(halfAngle)), (axis.z * sin(halfAngle)));
+}
+
+Quaternion::Quaternion(const float& initS, const float& initX, const float& initY, const float& initZ)
+	: scalar(initS), vector(initX, initY, initZ) {}
+
+Quaternion::~Quaternion() {}
+
+Quaternion Quaternion::Normalized()
+{
+	float d = (scalar*scalar) + vector.GetMagnitude();
+	if (d == 0)
+	{
+		return Quaternion();
+	}
+	return Quaternion((scalar/d), (vector.x/d), (vector.y/d), (vector.z/d));
+}
+
+EnMatrix3x3 Quaternion::To3x3Matrix()
+{
+	//There's no nice way of laying this out, so I'm doing it in the most readable way.
+	EnMatrix3x3 rotationMatrix;
+	//First Row
+	rotationMatrix.c[0].x = 1 - (2*(vector.y*vector.y) + 2*(vector.z*vector.z));
+	rotationMatrix.c[1].x = 2*vector.x*vector.y - 2*vector.z*scalar;
+	rotationMatrix.c[2].x = 2*vector.x*vector.z + 2*vector.y*scalar;
+	//Second Row
+	rotationMatrix.c[0].y = 2*vector.x*vector.y + 2*vector.z*scalar;
+	rotationMatrix.c[1].y = 1 - (2*(vector.x*vector.x) + 2*(vector.z*vector.z));
+	rotationMatrix.c[2].y = 2*vector.y*vector.z - 2*vector.x*scalar;
+	//Third Row
+	rotationMatrix.c[0].z = 2*vector.x*vector.z - 2*vector.y*scalar;
+	rotationMatrix.c[1].z = 2*vector.y*vector.z + 2*vector.x*scalar;
+	rotationMatrix.c[2].z = 1 - (2*(vector.x*vector.x) + 2*(vector.y*vector.y));
+	return rotationMatrix;
+}
+
+//Member operators
+Quaternion& Quaternion::operator*= (const Quaternion& rhs)
+{
+	float tempScalar =  scalar * rhs.scalar - vector.ADot(rhs.vector);
+	vector = EnVector3(	Util::ScalarProduct3D(rhs.vector, scalar) +
+						Util::ScalarProduct3D(vector, rhs.scalar) +
+						vector.Cross(rhs.vector));
+	scalar = tempScalar;
+	return *this;
+}
+
+
+//Non-Member operators
+Quaternion operator* (Quaternion lhs, const Quaternion& rhs)
+{
+	lhs *= rhs;
+	return lhs;
+}
+
+
 // Utilities that I might find useful
 namespace Util
 {
@@ -443,6 +523,13 @@ namespace Util
 	{
 		float x = v.x * s;
 		float y = v.y * s;
+		return EnVector2(x, y);
+	}
+
+	EnVector2 ScalarDivision2D(const EnVector2& v, const float& s)
+	{
+		float x = v.x / s;
+		float y = v.y / s;
 		return EnVector2(x, y);
 	}
 
@@ -479,6 +566,16 @@ namespace Util
 		T c = a;
 		a = b;
 		b = c;
+	}
+
+	float DegreesToRadians(const float& d)
+	{
+		return (d * PI) / 180.0f;
+	}
+	
+	float RadiansToDegrees(const float& r)
+	{
+		return (r * 180.0f) / PI;
 	}
 }
 

@@ -42,6 +42,7 @@ Entity::~Entity()
 
 //Runtime
 
+//Performs basic update operations all Entities will require
 void Entity::Update()
 {
 	//Update our AABB to our current co-ordinates.
@@ -49,6 +50,30 @@ void Entity::Update()
 	{
 		rigidBody->ReCalculateAABB(AABB);
 	}
+	UpdateQuaternion();
+	UpdateLocalToWorldMatrix();
+}
+
+void Entity::UpdateQuaternion()
+{
+	Quaternion xRotation(rotation.x, EnVector3(1.0f,0.0f,0.0f));
+	Quaternion yRotation(rotation.y, EnVector3(0.0f,1.0f,0.0f));
+	Quaternion zRotation(rotation.z, EnVector3(0.0f,0.0f,1.0f));
+	quaternion = xRotation*yRotation*zRotation;
+}
+
+void Entity::UpdateLocalToWorldMatrix()
+{
+	//Putting this in a readable way in case I need to revisit.
+	EnMatrix3x3 rotationMatrix = quaternion.To3x3Matrix();
+	for (UINT i = 0 ; i < 3 ; ++i)
+	{
+		for (UINT j = 0 ; j < 3 ; ++j)
+		{
+			localToWorld.c[i][j] = rotationMatrix.c[i][j];
+		}
+	}
+	localToWorld.c[3] = EnVector4(position.x, position.y, position.z, 1.0f);
 }
 
 bool Entity::OnEvent(IEvent* e)
