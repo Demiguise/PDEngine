@@ -232,7 +232,7 @@ void D3DRenderer::DrawScene()
 		{
 			mDeviceContext->IASetVertexBuffers(0, 1, &sceneData[i].bufferContents.vertexBuffer, &stride, &offset);
 			mDeviceContext->IASetIndexBuffer(sceneData[i].bufferContents.indexBuffer , DXGI_FORMAT_R32_UINT, 0);
-			XMMATRIX wvpMatrix = BuildWVPMatrix(sceneData[i].owningEntity->position, &mCamViewMatrix, &mProjMatrix);
+			XMMATRIX wvpMatrix = BuildWVPMatrix(sceneData[i].owningEntity->localToWorld, &mCamViewMatrix, &mProjMatrix);
 			mEffectWorldViewProj->SetMatrix(reinterpret_cast<float*>(&wvpMatrix));
 			mETech->GetPassByIndex(p)->Apply(0, mDeviceContext);
 			mDeviceContext->DrawIndexed(sceneData[i].bufferContents.iCount, 0, 0);
@@ -253,11 +253,21 @@ void D3DRenderer::DestroyBuffer(CRenderableObject* entity)
 
 }
 
-XMMATRIX D3DRenderer::BuildWVPMatrix(EnVector3 wPos, XMMATRIX* view, XMMATRIX* proj)
+XMMATRIX D3DRenderer::BuildWVPMatrix(EnMatrix4x4 entWorldMatrix, XMMATRIX* view, XMMATRIX* proj)
 {
-	XMMATRIX worldMatrix = XMMatrixTranslation(wPos.x, wPos.y, wPos.z);
+	XMMATRIX worldMatrix = ConvertToXMMatrix(entWorldMatrix);
 	XMMATRIX lView = *view;
 	XMMATRIX lProj = *proj;
 	XMMATRIX newMatrix = worldMatrix * lView * lProj;
 	return newMatrix;
+}
+
+XMMATRIX D3DRenderer::ConvertToXMMatrix(EnMatrix4x4 m)
+{
+	//We have to transpose as it appears that the XMMATRIX is expecting information in a per row basis, however we use per column.
+	XMMATRIX newMatrix(	m.c[0].x, m.c[1].x, m.c[2].x, m.c[3].x, 
+						m.c[0].y, m.c[1].y, m.c[2].y, m.c[3].y, 
+						m.c[0].z, m.c[1].z, m.c[2].z, m.c[3].z, 
+						m.c[0].w, m.c[1].w, m.c[2].w, m.c[3].w);
+	return XMMatrixTranspose(newMatrix);
 }

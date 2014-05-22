@@ -52,6 +52,7 @@ public:
 	float FindAngleBetween(const EnVector3& rhs);
 	EnVector3 Cross(const EnVector3& rhs);
 	EnVector3 MatrixMult3x3(const EnMatrix3x3& rhs);
+	EnVector3 MatrixMult4x4(const EnMatrix4x4& rhs);
 	EnVector3 Normalized();
 	float GetMagnitude() const;
 	EnVector3& operator+= (const EnVector3& rhs);
@@ -118,6 +119,7 @@ public:
 	EnMatrix4x4(const EnVector4& c1,const EnVector4& c2,const EnVector4& c3,const EnVector4& c4);
 	~EnMatrix4x4();
 	static EnMatrix4x4 Identity();
+	void Transpose();
 	EnVector4 c[4];
 };
 

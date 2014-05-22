@@ -45,13 +45,13 @@ Entity::~Entity()
 //Performs basic update operations all Entities will require
 void Entity::Update()
 {
+	UpdateQuaternion();
+	UpdateLocalToWorldMatrix();
 	//Update our AABB to our current co-ordinates.
 	if (rigidBody != 0)
 	{
 		rigidBody->ReCalculateAABB(AABB);
 	}
-	UpdateQuaternion();
-	UpdateLocalToWorldMatrix();
 }
 
 void Entity::UpdateQuaternion()

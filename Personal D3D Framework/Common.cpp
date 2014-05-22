@@ -114,10 +114,18 @@ float EnVector3::ADot(const EnVector3& rhs)
 
 EnVector3 EnVector3::MatrixMult3x3(const EnMatrix3x3& rhs)
 {
-	return EnVector3((rhs.c[0].x * x) + (rhs.c[0].y * y) + (rhs.c[0].z * z),
-					(rhs.c[1].x * x) + (rhs.c[1].y * y) + (rhs.c[1].z * z),
-					(rhs.c[2].x * x) + (rhs.c[2].y * y) + (rhs.c[2].z * z));
+	return EnVector3(	(rhs.c[0].x * x) + (rhs.c[1].x * y) + (rhs.c[2].x * z),
+						(rhs.c[0].y * x) + (rhs.c[1].y * y) + (rhs.c[2].y * z),
+						(rhs.c[0].z * x) + (rhs.c[1].z * y) + (rhs.c[2].z * z));
 }
+
+EnVector3 EnVector3::MatrixMult4x4(const EnMatrix4x4& rhs)
+{
+	return EnVector3(	(rhs.c[0].x * x) + (rhs.c[1].x * y) + (rhs.c[2].x * z) + rhs.c[3].x,
+						(rhs.c[0].y * x) + (rhs.c[1].y * y) + (rhs.c[2].y * z) + rhs.c[3].y,
+						(rhs.c[0].z * x) + (rhs.c[1].z * y) + (rhs.c[2].z * z) + rhs.c[3].z);
+}
+
 
 EnVector3 EnVector3::Normalized()
 {
@@ -444,6 +452,16 @@ EnMatrix4x4 EnMatrix4x4::Identity()
 						EnVector4(0.0f, 1.0f, 0.0f, 0.0f),
 						EnVector4(0.0f, 0.0f, 1.0f, 0.0f),
 						EnVector4(0.0f, 0.0f, 0.0f, 1.0f));
+}
+
+void EnMatrix4x4::Transpose()
+{
+	Util::SwapValues(c[1][0], c[0][1]);
+	Util::SwapValues(c[2][0], c[0][2]);
+	Util::SwapValues(c[3][0], c[0][3]);
+	Util::SwapValues(c[2][1], c[1][2]);
+	Util::SwapValues(c[3][1], c[1][3]);
+	Util::SwapValues(c[3][2], c[2][3]);
 }
 
 //======== Quaternion (For Rotations)

@@ -22,7 +22,8 @@ private:
 	bool InitBuffers();
 	void CreateInputLayer();
 	void InitEffects();
-	XMMATRIX BuildWVPMatrix(EnVector3 wPos, XMMATRIX* view, XMMATRIX* proj);
+	XMMATRIX BuildWVPMatrix(EnMatrix4x4 worldMatrix, XMMATRIX* view, XMMATRIX* proj);
+	XMMATRIX ConvertToXMMatrix(EnMatrix4x4 m);
 
 	//DirectX COM Devices
 	ID3D11Device* md3dDevice;

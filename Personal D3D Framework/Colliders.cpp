@@ -42,11 +42,11 @@ BoxCollider::~BoxCollider()
 
 void BoxCollider::ReCalculateAABB(BoundingBox& curAABB)
 {
-	EnVector3 curMin = rbModel.vData[0].position + parent->position;
-	EnVector3 curMax = rbModel.vData[0].position + parent->position;
+	EnVector3 curMin = rbModel.vData[0].position.MatrixMult4x4(parent->localToWorld);
+	EnVector3 curMax = rbModel.vData[0].position.MatrixMult4x4(parent->localToWorld);
 	for (UINT i = 1 ; i < rbModel.vData.size() ; ++i)
 	{
-		EnVector3 curVertex = rbModel.vData[i].position + parent->position;
+		EnVector3 curVertex = rbModel.vData[i].position.MatrixMult4x4(parent->localToWorld);
 		if (curVertex.x > curMax.x) { curMax.x = curVertex.x; }
 		if (curVertex.y > curMax.y) { curMax.y = curVertex.y; }
 		if (curVertex.z > curMax.z) { curMax.z = curVertex.z; }
