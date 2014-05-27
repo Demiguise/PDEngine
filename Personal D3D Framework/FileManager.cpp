@@ -187,5 +187,6 @@ void FileManager::MoveAndRenameLog()
 	std::ifstream originFile(logLocation);
 	destFile << originFile.rdbuf();
 	originFile.close();
+	remove ( logLocation );
 	destFile.close();
 }

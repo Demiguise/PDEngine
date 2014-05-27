@@ -10,6 +10,7 @@ RigidBody::RigidBody(float initMass, Entity* parentEnt)
 	collidable = true;
 	affectedByGravity = false;
 	parent = parentEnt;
+	isAwake = true;
 }
 
 RigidBody::~RigidBody()
@@ -34,6 +35,8 @@ BoxCollider::BoxCollider(const ModelData& model, float initMass, Entity* parentE
 {
 	typeFlag = ColliderType::Box;
 	rbModel = model;
+	//HACK : I need to be able to calculate this rather than set it. In the case of scaling and such.
+	halfExtents = EnVector3(1.0f, 1.0f, 1.0f);
 }
 
 BoxCollider::~BoxCollider()
@@ -56,7 +59,6 @@ void BoxCollider::ReCalculateAABB(BoundingBox& curAABB)
 	}
 	curAABB.minPoint = curMin;
 	curAABB.maxPoint = curMax;
-	halfExtents = Util::ScalarProduct3D((curMin - curMax), 0.5f);
 }
 
 //Contact Generation
@@ -117,6 +119,7 @@ CollisionData* SphereCollider::GenerateContacts(RigidBody* contactingBody)
 	case ColliderType::Box:
 		if (CollisionDetectors::BoxAndSphere(static_cast<BoxCollider*>(contactingBody), this, contacts))
 		{
+
 			data->contacts = contacts;
 			return data;
 		}
@@ -145,13 +148,60 @@ namespace CollisionDetectors
 					const BoxCollider* b,
 					std::vector<Contact*>& data)
 	{
-		Contact* newContact = new Contact();
-		newContact->contactNormal = EnVector3::Zero();
-		newContact->contactPoint = EnVector3::Zero();
-		newContact->penetration = 3.145f;
-		data.push_back(newContact);
+		if (HyperplaneSeperationTest(a,b))
+		{
+			Contact* newContact = new Contact();
+			Contact* tempContact = new Contact();
+			//We'll iterate through all the points in the box A and find the point of deepest interpenetration
+			for (int i = 0 ; i < a->rbModel.vData.size() ; ++i)
+			{
+				if ((BoxAndPoint(a->rbModel.vData[i].position.MatrixMult4x4(a->parent->localToWorld), b, *tempContact)) && (tempContact->penetration > newContact->penetration))
+				{
+					*newContact = *tempContact;
+				}
+			}
+			data.push_back(newContact);
+			delete tempContact;
+			return true;
+		}
+		return false;
+	}
+
+	bool BoxAndPoint(	const EnVector3& p,
+						const BoxCollider* b,
+						Contact& data)
+	{
+		EnVector3 relativePoint = b->parent->localToWorld.RotationalInverse(p);
+		EnVector3 normal;
+		float minimumDepth = b->halfExtents.x - abs(relativePoint.x);
+		float depth;
+
+		if (minimumDepth < 0) { return false; }
+		normal = Util::ScalarProduct3D(b->parent->GetLocalAxis(0), ((relativePoint.x < 0)?-1:1));
+
+		depth = b->halfExtents.y - abs(relativePoint.y);
+		if (depth < 0) { return false; }
+		else if (depth < minimumDepth)
+		{
+			minimumDepth = depth;
+			normal = Util::ScalarProduct3D(b->parent->GetLocalAxis(1), ((relativePoint.y < 0)?-1:1));
+		}
+
+		depth = b->halfExtents.z - abs(relativePoint.z);
+		if (depth < 0) { return false; }
+		else if (depth < minimumDepth)
+		{
+			minimumDepth = depth;
+			normal = Util::ScalarProduct3D(b->parent->GetLocalAxis(2), ((relativePoint.z < 0)?-1:1));
+		}
+
+		data.contactNormal = normal;
+		data.contactPoint = p;
+		data.penetration = minimumDepth;
+
 		return true;
 	}
+
 
 	bool SphereAndSphere(	const SphereCollider* a,
 							const SphereCollider* b,
@@ -160,24 +210,77 @@ namespace CollisionDetectors
 		EnVector3 vectorToTarget = b->centrePoint - a->centrePoint;
 		float penetration = vectorToTarget.GetMagnitude();
 		if (penetration <= 0.0f || penetration >= a->radius + b->radius) { return false; }
+
 		Contact* newContact = new Contact();
-		newContact->contactNormal = vectorToTarget.Normalized();
+		newContact->contactNormal = Util::ScalarProduct3D(vectorToTarget.Normalized(), -1.0f);
 		newContact->contactPoint = a->centrePoint + Util::ScalarProduct3D(vectorToTarget, 0.5f);
 		newContact->penetration = (a->radius + b->radius) - penetration;
 		data.push_back(newContact);
 		return true;
 	}
 
-	bool HyperspaceSeperationTest(	const BoxCollider* a,
-									const BoxCollider* b,
-									const EnVector3& axis)
+	bool HyperplaneSeperationTest(	const BoxCollider* a,
+									const BoxCollider* b)
 	{
-		return false;
+		//Now for the actual testing.
+				//Box A's Axes
+		return (TestForOverlap(a,b, a->parent->GetLocalAxis(0)) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(1)) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(2)) &&
+				//Box b's axes
+				TestForOverlap(a,b, b->parent->GetLocalAxis(0)) &&
+				TestForOverlap(a,b, b->parent->GetLocalAxis(1)) &&
+				TestForOverlap(a,b, b->parent->GetLocalAxis(2)) &&
+				//Cross products of each axes
+				TestForOverlap(a,b, a->parent->GetLocalAxis(0).Cross(b->parent->GetLocalAxis(0))) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(0).Cross(b->parent->GetLocalAxis(1))) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(0).Cross(b->parent->GetLocalAxis(2))) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(1).Cross(b->parent->GetLocalAxis(0))) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(1).Cross(b->parent->GetLocalAxis(1))) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(1).Cross(b->parent->GetLocalAxis(2))) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(2).Cross(b->parent->GetLocalAxis(0))) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(2).Cross(b->parent->GetLocalAxis(1))) &&
+				TestForOverlap(a,b, a->parent->GetLocalAxis(2).Cross(b->parent->GetLocalAxis(2))));
+
+		////Debug return code. For when I need to test things...
+		////Box A's Axes
+		//bool aX1 = TestForOverlap(a,b, a->parent->GetLocalAxis(0));
+		//bool aX2 = TestForOverlap(a,b, a->parent->GetLocalAxis(1));
+		//bool aX3 = TestForOverlap(a,b, a->parent->GetLocalAxis(2));
+		////Box b's axes
+		//bool bX1 = TestForOverlap(a,b, b->parent->GetLocalAxis(0));
+		//bool bX2 = TestForOverlap(a,b, b->parent->GetLocalAxis(1));
+		//bool bX3 = TestForOverlap(a,b, b->parent->GetLocalAxis(2));
+		////Cross products of each axes
+		//bool abX11 = TestForOverlap(a,b, a->parent->GetLocalAxis(0).Cross(b->parent->GetLocalAxis(0)));
+		//bool abX12 = TestForOverlap(a,b, a->parent->GetLocalAxis(0).Cross(b->parent->GetLocalAxis(1))); 
+		//bool abX13 = TestForOverlap(a,b, a->parent->GetLocalAxis(0).Cross(b->parent->GetLocalAxis(2))); 
+		//bool abX21 = TestForOverlap(a,b, a->parent->GetLocalAxis(1).Cross(b->parent->GetLocalAxis(0))); 
+		//bool abX22 = TestForOverlap(a,b, a->parent->GetLocalAxis(1).Cross(b->parent->GetLocalAxis(1))); 
+		//bool abX23 = TestForOverlap(a,b, a->parent->GetLocalAxis(1).Cross(b->parent->GetLocalAxis(2))); 
+		//bool abX31 = TestForOverlap(a,b, a->parent->GetLocalAxis(2).Cross(b->parent->GetLocalAxis(0))); 
+		//bool abX32 = TestForOverlap(a,b, a->parent->GetLocalAxis(2).Cross(b->parent->GetLocalAxis(1))); 
+		//bool abX33 = TestForOverlap(a,b, a->parent->GetLocalAxis(2).Cross(b->parent->GetLocalAxis(2)));
+		//return true;
 	}
+
+	bool TestForOverlap(	const BoxCollider* a,
+							const BoxCollider* b,
+							const EnVector3& axis)
+	{
+		float aProjection = ProjectToAxis(a, axis);
+		float bProjection = ProjectToAxis(b, axis);
+		EnVector3 abVector = b->parent->GetLocalAxis(3) - a->parent->GetLocalAxis(3);
+		float abVectorProjection = abs(abVector.ADot(axis));
+		return abVectorProjection <= (aProjection + bProjection);
+	}
+
 
 	float ProjectToAxis(const BoxCollider* a,
 						const EnVector3& axis)
 	{
-		return 0.0f;
+		return (	abs(a->halfExtents.x * axis.ADot(a->parent->GetLocalAxis(0))) +
+					abs(a->halfExtents.y * axis.ADot(a->parent->GetLocalAxis(1))) +
+					abs(a->halfExtents.z * axis.ADot(a->parent->GetLocalAxis(2))));
 	}
 }

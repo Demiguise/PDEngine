@@ -59,12 +59,11 @@ void Entity::UpdateQuaternion()
 	Quaternion xRotation(rotation.x, EnVector3(1.0f,0.0f,0.0f));
 	Quaternion yRotation(rotation.y, EnVector3(0.0f,1.0f,0.0f));
 	Quaternion zRotation(rotation.z, EnVector3(0.0f,0.0f,1.0f));
-	quaternion = xRotation*yRotation*zRotation;
+	quaternion = (xRotation*yRotation*zRotation).Normalized();
 }
 
 void Entity::UpdateLocalToWorldMatrix()
 {
-	//Putting this in a readable way in case I need to revisit.
 	EnMatrix3x3 rotationMatrix = quaternion.To3x3Matrix();
 	for (UINT i = 0 ; i < 3 ; ++i)
 	{
@@ -74,6 +73,23 @@ void Entity::UpdateLocalToWorldMatrix()
 		}
 	}
 	localToWorld.c[3] = EnVector4(position.x, position.y, position.z, 1.0f);
+}
+
+EnVector3 Entity::GetLocalAxis(const int& index)
+{
+	assert ((index <= 3) && (index >= 0));
+	switch (index)
+	{
+	case 0:
+		return EnVector3(localToWorld.c[0].x, localToWorld.c[0].y, localToWorld.c[0].z);
+	case 1:
+		return EnVector3(localToWorld.c[1].x, localToWorld.c[1].y, localToWorld.c[1].z);
+	case 2:
+		return EnVector3(localToWorld.c[2].x, localToWorld.c[2].y, localToWorld.c[2].z);
+	case 3:
+		return EnVector3(localToWorld.c[3].x, localToWorld.c[3].y, localToWorld.c[3].z);
+	}
+
 }
 
 bool Entity::OnEvent(IEvent* e)

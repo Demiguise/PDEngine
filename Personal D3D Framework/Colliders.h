@@ -46,9 +46,9 @@ public:
 
 	virtual CollisionData* GenerateContacts(RigidBody* contactingBody);
 
+	bool isAwake;
 	Entity* parent;
 	EnVector3 centrePoint;
-	
 	bool collidable;
 	bool affectedByGravity;
 	float mass;
@@ -64,7 +64,6 @@ public:
 	BoxCollider(const ModelData& model, float initMass, Entity* parentEnt);
 	~BoxCollider();
 	void ReCalculateAABB(BoundingBox& curAABB);
-	float extents;
 	CollisionData* GenerateContacts(RigidBody* contactingBody);
 	EnVector3 halfExtents;
 };
@@ -81,21 +80,28 @@ public:
 
 namespace CollisionDetectors
 {
-	bool BoxAndSphere(		const BoxCollider* a,
-							const SphereCollider* b,
-							std::vector<Contact*>& data);
+	bool BoxAndSphere(	const BoxCollider* a,
+						const SphereCollider* b,
+						std::vector<Contact*>& data);
 
-	bool BoxAndBox(			const BoxCollider* a,
-							const BoxCollider* b,
-							std::vector<Contact*>& data);
+	bool BoxAndBox(	const BoxCollider* a,
+					const BoxCollider* b,
+					std::vector<Contact*>& data);
+
+	bool BoxAndPoint(	const EnVector3& p,
+						const BoxCollider* b,
+						Contact& data);
 
 	bool SphereAndSphere(	const SphereCollider* a,
 							const SphereCollider* b,
 							std::vector<Contact*>& data);
 
-	bool HyperspaceSeperationTest(	const BoxCollider* a,
-									const BoxCollider* b,
-									const EnVector3& axis);
+	bool HyperplaneSeperationTest(	const BoxCollider* a,
+									const BoxCollider* b);
+
+	bool TestForOverlap(	const BoxCollider* a,
+							const BoxCollider* b,
+							const EnVector3& axis);
 
 	float ProjectToAxis(const BoxCollider* a,
 						const EnVector3& axis);

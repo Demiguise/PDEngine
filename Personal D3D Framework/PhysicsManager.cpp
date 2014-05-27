@@ -77,15 +77,14 @@ std::vector<CollisionPair> PhysicsManager::CoarseCollisionDetection(const std::d
 	for (UINT i = 0 ; i < sceneCollideables.size() ; ++i)
 	{
 		curEnt = sceneCollideables[i];
-		possibleCollisions.clear();
 		for (UINT j = 0 ; j < sceneCollideables.size() ; ++j)
 		{
-			if ((i != j) && (sceneCollideables[j]->TestAABBIntersection(curEnt->AABB))) 
+			if ((i != j) && (curEnt->TestAABBIntersection(sceneCollideables[j]->AABB))) 
 			{ //Collision between two entities has occured.
 				bool collisionIsUnique = true;
 				for (UINT k = 0 ; k < possibleCollisions.size() ; ++k)
 				{
-					if((possibleCollisions[k].a == sceneCollideables[j]) && (possibleCollisions[k].b == curEnt))
+					if((possibleCollisions[k].a == sceneCollideables[j]) && (possibleCollisions[k].b == curEnt ))
 					{ //Already a collision between these two entities in the system, ignore it.
 						collisionIsUnique = false;
 					}
@@ -108,31 +107,27 @@ void PhysicsManager::GenerateContacts(std::vector<CollisionPair>& coarseCollisio
 
 void PhysicsManager::ResolveCollisions(std::vector<CollisionPair>& possibleCollisions, const float& dt)
 {
-	//for ( UINT i = 0 ; i < possibleCollisions.size() ; ++i)
-	//{
-	//	if (possibleCollisions[i].data != 0) { continue; }
-	//	RayCastHit CollisionInfo;
-	//	Entity* entA = possibleCollisions[i].a;
-	//	Entity* entB = possibleCollisions[i].b;
-	//	EnVector3 directionVector = entB->position - entA->position;
-	//	if (CastRay(entA->position, directionVector,
-	//				Util::ScalarProduct3D(entA->velocity, dt).GetMagnitude(), 
-	//				CollisionInfo))
-	//	{	//If the ray hit an object within the distance given then an actual collision has occured, resolve it.
-	//		//Remember that entB might not actually be the Entity hit.
+	//This only considers the first contact data in the collision pair for the moment.
+	for ( UINT i = 0 ; i < possibleCollisions.size() ; ++i)
+	{
+		if (possibleCollisions[i].data == 0 || 
+			possibleCollisions[i].a->rigidBody->isAwake == false ||
+			possibleCollisions[i].b->rigidBody->isAwake == false) { continue; }
+		Entity* entA = possibleCollisions[i].a;
+		Entity* entB = possibleCollisions[i].b;
 
-	//		float restitution = 0.0f; //Controls the elasticity of the collisions, 0 = inelastic & 1 = elastic.
-	//		float seperatingVelocity = (entA->velocity - CollisionInfo.entityHit->velocity).ADot(CollisionInfo.normal);
-	//		float deltaVelocity = (-seperatingVelocity * restitution) - seperatingVelocity;
-	//		float totalInverseMass = 1/(entA->rigidBody->mass + CollisionInfo.entityHit->rigidBody->mass);
-	//		float impulse = deltaVelocity / totalInverseMass;
-	//		EnVector3 impulsePerIMass = Util::ScalarProduct3D(CollisionInfo.normal, impulse);
+		float restitution = 0.0f; //Controls the elasticity of the collisions, 0 = inelastic & 1 = elastic.
+		float seperatingVelocity = (entA->velocity -  entB->velocity).ADot(possibleCollisions[i].data->contacts[0]->contactNormal);
+		float deltaVelocity = (-seperatingVelocity * restitution) - seperatingVelocity;
+		float totalInverseMass = 1.0f/(entA->rigidBody->mass) + 1.0f/(entB->rigidBody->mass);
+		float impulse = deltaVelocity / totalInverseMass;
+		EnVector3 impulsePerIMass = Util::ScalarProduct3D(possibleCollisions[i].data->contacts[0]->contactNormal, impulse);
 
-	//		entA->velocity += Util::ScalarProduct3D(impulsePerIMass, 1/entA->rigidBody->mass);
-	//		CollisionInfo.entityHit->velocity += Util::ScalarProduct3D(impulsePerIMass, 1/-CollisionInfo.entityHit->rigidBody->mass);
-	//		GameLog::GetInstance()->Log(DebugChannel::Physics, DebugLevel::Normal, "[Physics] %s will collide with %s next frame.", entA->name.c_str(), CollisionInfo.entityHit->name.c_str());
-	//	}
-	//}
+		entA->velocity += Util::ScalarProduct3D(impulsePerIMass, 1/entA->rigidBody->mass);
+		entB->velocity += Util::ScalarProduct3D(impulsePerIMass, 1/-entB->rigidBody->mass);
+		entA->rigidBody->isAwake = entB->rigidBody->isAwake = false;
+		GameLog::GetInstance()->Log(DebugChannel::Physics, DebugLevel::Normal, "[Physics] %s will collide with %s next frame.", entA->name.c_str(), entB->name.c_str());
+	}
 }
 
 bool PhysicsManager::CastRay(EnVector3 pos, EnVector3 dir,  float dist, RayCastHit& raycastOut)

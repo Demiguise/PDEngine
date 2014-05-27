@@ -20,7 +20,7 @@ public:
 	virtual bool OnEvent(IEvent* e);
 	void AddForce(EnVector3 direction, float power);
 	bool TestAABBIntersection(BoundingBox& incomingAABB);
-
+	EnVector3 GetLocalAxis(const int& index);
 	std::string name;
 	UINT uID;
 	EnVector3 position;

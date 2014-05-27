@@ -87,7 +87,7 @@ EnVector3 EnVector3::Cross(const EnVector3& rhs)
 }
 
 //Returns Radians (Via the _CMATH_::acos function)
-float EnVector3::FindAngleBetween(const EnVector3& rhs)
+float EnVector3::FindAngleBetween(const EnVector3& rhs) const
 {
 	float lhsMag = GetMagnitude();
 	float rhsMag = rhs.GetMagnitude();
@@ -96,30 +96,21 @@ float EnVector3::FindAngleBetween(const EnVector3& rhs)
 	return acos(dotProduct/(lhsMag * rhsMag));
 }
 
- //Geometric Dot product - Returns new Vector
-EnVector3 EnVector3::GDot(const EnVector3& rhs) 
-{
-	float rX = x * rhs.x;
-	float rY = y * rhs.y;
-	float rZ = z * rhs.z;
-	return EnVector3(rX, rY, rZ);
-}
-
 //Algebraic Dot product - Returns scalar value
-float EnVector3::ADot(const EnVector3& rhs)
+float EnVector3::ADot(const EnVector3& rhs) const
 {
 	return (x * rhs.x) + (y * rhs.y) + (z * rhs.z);
 }
 
 
-EnVector3 EnVector3::MatrixMult3x3(const EnMatrix3x3& rhs)
+EnVector3 EnVector3::MatrixMult3x3(const EnMatrix3x3& rhs) const
 {
 	return EnVector3(	(rhs.c[0].x * x) + (rhs.c[1].x * y) + (rhs.c[2].x * z),
 						(rhs.c[0].y * x) + (rhs.c[1].y * y) + (rhs.c[2].y * z),
 						(rhs.c[0].z * x) + (rhs.c[1].z * y) + (rhs.c[2].z * z));
 }
 
-EnVector3 EnVector3::MatrixMult4x4(const EnMatrix4x4& rhs)
+EnVector3 EnVector3::MatrixMult4x4(const EnMatrix4x4& rhs) const
 {
 	return EnVector3(	(rhs.c[0].x * x) + (rhs.c[1].x * y) + (rhs.c[2].x * z) + rhs.c[3].x,
 						(rhs.c[0].y * x) + (rhs.c[1].y * y) + (rhs.c[2].y * z) + rhs.c[3].y,
@@ -153,13 +144,10 @@ float& EnVector3::operator[] (int index)
 	{
 	case 0:
 		return x;
-		break;
 	case 1:
 		return y;
-		break;
 	case 2:
 		return z;
-		break;
 	}
 }
 
@@ -454,6 +442,24 @@ EnMatrix4x4 EnMatrix4x4::Identity()
 						EnVector4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
+//This uses the idea that the inverse of a rotational matrix is its transpose.
+//If the matrix is not free from shear and scale this will inevitably fail to 
+//give the correct results. Use caution. I have yet to implement an inverse function
+//for a 4x4 matrix as it appears slightly more difficult than 4x4 at a cursory glance.
+EnVector3 EnMatrix4x4::RotationalInverse(const EnVector3& v)
+{
+	EnVector3 tempVector = v;
+	EnMatrix3x3 tempRotation = EnMatrix3x3( EnVector3(c[0].x, c[0].y, c[0].z),
+											EnVector3(c[0].x, c[0].y, c[0].z),
+											EnVector3(c[0].x, c[0].y, c[0].z));
+	tempRotation.Transpose();
+	tempVector.x -= c[3].x;
+	tempVector.y -= c[3].y;
+	tempVector.z -= c[3].z;
+	return EnVector3 ( tempVector.MatrixMult3x3(tempRotation));
+}
+
+
 void EnMatrix4x4::Transpose()
 {
 	Util::SwapValues(c[1][0], c[0][1]);
@@ -463,6 +469,7 @@ void EnMatrix4x4::Transpose()
 	Util::SwapValues(c[3][1], c[1][3]);
 	Util::SwapValues(c[3][2], c[2][3]);
 }
+
 
 //======== Quaternion (For Rotations)
 // A Quaternion is made up of four parts, 1 scalar and a 3D vector.
@@ -475,9 +482,10 @@ Quaternion::Quaternion()
 
 Quaternion::Quaternion(const float& angle, const EnVector3& axis)
 {
-	float halfAngle = Util::DegreesToRadians(angle)/2.0f;
+	float halfAngle = Util::DegreesToRadians(angle/2.0f);
+	float sineAngle = sin(halfAngle);
 	scalar = cos(halfAngle);
-	vector = EnVector3 ((axis.x * sin(halfAngle)), (axis.y * sin(halfAngle)), (axis.z * sin(halfAngle)));
+	vector = EnVector3 ((axis.x * sineAngle), (axis.y * sineAngle), (axis.z * sineAngle));
 }
 
 Quaternion::Quaternion(const float& initS, const float& initX, const float& initY, const float& initZ)
@@ -487,12 +495,21 @@ Quaternion::~Quaternion() {}
 
 Quaternion Quaternion::Normalized()
 {
-	float d = (scalar*scalar) + vector.GetMagnitude();
-	if (d == 0)
+	float magnitude = GetMagnitude();
+	if (magnitude == 0)
 	{
 		return Quaternion();
 	}
-	return Quaternion((scalar/d), (vector.x/d), (vector.y/d), (vector.z/d));
+	return Quaternion((scalar/magnitude), (vector.x/magnitude), (vector.y/magnitude), (vector.z/magnitude));
+}
+
+float Quaternion::GetMagnitude()
+{
+	float a = scalar * scalar;
+	float b = vector.x * vector.x;
+	float c = vector.y * vector.y;
+	float d = vector.z * vector.z;
+	return sqrt(a+b+c+d);
 }
 
 EnMatrix3x3 Quaternion::To3x3Matrix()

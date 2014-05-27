@@ -47,12 +47,11 @@ public:
 	EnVector3(const float& initX, const float& initY, const float& initZ);
 	~EnVector3();
 	static EnVector3 Zero();
-	EnVector3 GDot(const EnVector3& rhs); //Geometric Dot product - Returns new Vector
-	float ADot(const EnVector3& rhs); //Algebraic Dot product - Returns scalar value
-	float FindAngleBetween(const EnVector3& rhs);
+	float ADot(const EnVector3& rhs) const; //Algebraic Dot product - Returns scalar value
+	float FindAngleBetween(const EnVector3& rhs) const;
 	EnVector3 Cross(const EnVector3& rhs);
-	EnVector3 MatrixMult3x3(const EnMatrix3x3& rhs);
-	EnVector3 MatrixMult4x4(const EnMatrix4x4& rhs);
+	EnVector3 MatrixMult3x3(const EnMatrix3x3& rhs) const;
+	EnVector3 MatrixMult4x4(const EnMatrix4x4& rhs) const;
 	EnVector3 Normalized();
 	float GetMagnitude() const;
 	EnVector3& operator+= (const EnVector3& rhs);
@@ -119,6 +118,7 @@ public:
 	EnMatrix4x4(const EnVector4& c1,const EnVector4& c2,const EnVector4& c3,const EnVector4& c4);
 	~EnMatrix4x4();
 	static EnMatrix4x4 Identity();
+	EnVector3 RotationalInverse(const EnVector3& v);
 	void Transpose();
 	EnVector4 c[4];
 };
@@ -132,6 +132,7 @@ public:
 	~Quaternion();
 	Quaternion Normalized();
 	EnMatrix3x3 To3x3Matrix();
+	float GetMagnitude();
 	float scalar;
 	EnVector3 vector;
 	Quaternion& operator*= (const Quaternion& rhs);
