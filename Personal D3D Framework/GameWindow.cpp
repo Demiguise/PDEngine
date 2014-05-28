@@ -34,6 +34,7 @@ LRESULT GameWindow::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_KEYDOWN:
 	case WM_KEYUP:
+	case WM_MOUSEMOVE:
 		mInput->Update(msg, wParam, lParam);
 		break;
 	}

@@ -28,6 +28,10 @@ void CInput::Update(UINT msg, WPARAM wParam, LPARAM lParam)
 	InputEvent* inputEvent = new InputEvent();
 	switch (msg)
 	{
+	case WM_MOUSEMOVE:
+		inputEvent->eType = "UserMouseMove";
+		inputEvent->mouseMovement = EnVector2(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		break;
 	case WM_KEYDOWN:
 		inputEvent->eType = "UserKeyPress";
 		inputEvent->keyEvent = TranslateKeyPress(wParam);

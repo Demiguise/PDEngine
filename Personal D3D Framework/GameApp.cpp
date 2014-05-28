@@ -19,7 +19,8 @@ GameApp::GameApp(HINSTANCE hInstance)
 											mClientHeight, mClientWidth);
 	mSceneManager = new SceneManager(mFileManager);
 	mCamera = new Camera(mSceneManager->GenerateUID(),
-					EnVector3(0.0f, 0.0f, 30.0f));
+					EnVector3(0.0f, 0.0f, 30.0f),
+					EnVector3(0.0f, 45.0f, 0.0f));
 	mCamera->name = "Camera 1";
 	std::vector<ModelData> colliders;
 	colliders.push_back(mFileManager->LoadModelData("Models/Colliders/RBCube.obj"));
@@ -38,7 +39,7 @@ void GameApp::CreateTestObjects()
 	CRenderableObject* nObj = new CRenderableObject(mSceneManager->GenerateUID(),
 									mFileManager->LoadModelData("Models/Box.obj"),
 													EnVector3(-4.0f, 0.0f, 0.0f),
-													EnVector3(0.0f, 0.0f, 0.0f));
+													EnVector3(0.0f, 0.0f, 45.0f));
 	mRenderer->CreateBuffer(nObj);
 	mSceneManager->RegisterEntity(nObj);
 	mPhysicsManager->RegisterEntity(nObj, ColliderType::Box, 1);
@@ -47,7 +48,8 @@ void GameApp::CreateTestObjects()
 
 	CRenderableObject* nObj2 = new CRenderableObject(mSceneManager->GenerateUID(),
 									mFileManager->LoadModelData("Models/Box.obj"),
-													EnVector3(4.0f, 0.0f, 0.0f));
+													EnVector3(4.0f, 0.0f, 0.0f),
+													EnVector3(0.0f, 0.0f, 45.0f));
 	mRenderer->CreateBuffer(nObj2);
 	mSceneManager->RegisterEntity(nObj2);
 	mPhysicsManager->RegisterEntity(nObj2, ColliderType::Box, 1);
@@ -84,7 +86,7 @@ int GameApp::Run()
 			
 			mEventManager->Update();
 			mSceneManager->UpdateEntities();
-			mRenderer->UpdateScene(mSceneManager->activeCamera->position);
+			mRenderer->UpdateScene(mSceneManager->activeCamera->localToWorld);
 			mRenderer->DrawScene();
 		}
 	}

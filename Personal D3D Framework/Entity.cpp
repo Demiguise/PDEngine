@@ -5,10 +5,7 @@ Entity::Entity(UINT ID, EnVector3 initPos, EnVector3 initRot)
 	uID = ID;
 	position = initPos;
 	rotation = initRot;
-	forceAccum = EnVector3::Zero();
-	velocity = EnVector3::Zero();
-	AABB = BoundingBox();
-	rigidBody = 0;
+	Init();
 }
 
 Entity::Entity(UINT ID, EnVector3 initPos)
@@ -16,10 +13,7 @@ Entity::Entity(UINT ID, EnVector3 initPos)
 	uID = ID;
 	position = initPos;
 	rotation = EnVector3::Zero();
-	forceAccum = EnVector3::Zero();
-	velocity = EnVector3::Zero();
-	AABB = BoundingBox();
-	rigidBody = 0;
+	Init();
 }
 
 Entity::Entity(UINT ID)
@@ -27,10 +21,7 @@ Entity::Entity(UINT ID)
 	uID = ID;
 	position = EnVector3::Zero();
 	rotation = EnVector3::Zero();
-	forceAccum = EnVector3::Zero();
-	velocity = EnVector3::Zero();
-	AABB = BoundingBox();
-	rigidBody = 0;
+	Init();
 }
 
 Entity::~Entity()
@@ -38,6 +29,14 @@ Entity::~Entity()
 	IEventManager* eventMan = IEventManager::GetInstance();
 	eventMan->RemoveAllListenersFromEnt(this);
 	delete rigidBody;
+}
+
+void Entity::Init()
+{
+	forceAccum = EnVector3::Zero();
+	velocity = EnVector3::Zero();
+	AABB = BoundingBox();
+	rigidBody = 0;
 }
 
 //Runtime

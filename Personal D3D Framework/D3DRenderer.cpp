@@ -199,11 +199,12 @@ void D3DRenderer::OnResize(UINT newHeight, UINT newWidth)
 	mProjMatrix = XMMatrixPerspectiveFovLH(0.25f*3.14f, newWidth/newHeight, 1.0f, 1000.0f);
 }
 
-void D3DRenderer::UpdateScene(const EnVector3 &camPos)
+void D3DRenderer::UpdateScene(const EnMatrix4x4 &camPos)
 {
-	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	XMVECTOR camPosVector = XMVectorSet(camPos.x, camPos.y, camPos.z, 1.0f);
-	mCamViewMatrix = XMMatrixLookAtLH(camPosVector, XMVectorZero(), up);
+	//XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	//XMVECTOR camPosVector = XMVectorSet(camPos.x, camPos.y, camPos.z, 1.0f);
+	//mCamViewMatrix = XMMatrixLookAtLH(camPosVector, XMVectorZero(), up);
+	mCamViewMatrix = ConvertToXMMatrix(camPos);
 }
 
 void D3DRenderer::DrawScene()

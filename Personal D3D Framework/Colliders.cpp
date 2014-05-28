@@ -1,7 +1,5 @@
 #include "Colliders.h"
 
-
-
 //Base RigidBody
 RigidBody::RigidBody(float initMass, Entity* parentEnt)
 {
@@ -27,7 +25,6 @@ CollisionData* RigidBody::GenerateContacts(RigidBody* contactingBody)
 {
 	return 0;
 }
-
 
 //Box Collider
 BoxCollider::BoxCollider(const ModelData& model, float initMass, Entity* parentEnt)
@@ -107,7 +104,6 @@ void SphereCollider::ReCalculateAABB(BoundingBox& curAABB)
 }
 
 //Contact Generation
-
 CollisionData* SphereCollider::GenerateContacts(RigidBody* contactingBody)
 {
 	CollisionData* data = new CollisionData();
@@ -150,12 +146,12 @@ namespace CollisionDetectors
 	{
 		if (HyperplaneSeperationTest(a,b))
 		{
-			Contact* newContact = new Contact();
 			Contact* tempContact = new Contact();
-			//We'll iterate through all the points in the box A and find the point of deepest interpenetration
+			Contact* newContact = new Contact(EnVector3::Zero(), EnVector3::Zero(), 10.0f);
+			//We'll iterate through all the points in the box A and find the axis with the shallowest penetration.
 			for (int i = 0 ; i < a->rbModel.vData.size() ; ++i)
 			{
-				if ((BoxAndPoint(a->rbModel.vData[i].position.MatrixMult4x4(a->parent->localToWorld), b, *tempContact)) && (tempContact->penetration > newContact->penetration))
+				if ((BoxAndPoint(a->rbModel.vData[i].position.MatrixMult4x4(a->parent->localToWorld), b, *tempContact)) && (tempContact->penetration < newContact->penetration))
 				{
 					*newContact = *tempContact;
 				}

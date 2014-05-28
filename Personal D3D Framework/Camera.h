@@ -12,13 +12,20 @@ public:
 	Camera(UINT uID, EnVector3 initPos);
 	Camera(UINT uID);
 	~Camera();
+	void Update();
 	void SetPosition(EnVector3 newPos);
 	void SetRotation(EnVector3 newRot);
 	bool OnEvent(IEvent* e);
+
+	float mouseSensitivity;
+	
 
 private:
 	void AddListeners();
 	void RemoveListener(std::string eventType);
 	void GhettoMove(EnVector3 direction);
+	void Init();
+
+	EnVector2 curMousePosition;
 };
 

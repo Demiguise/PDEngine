@@ -11,7 +11,7 @@ public: //Functions
 	D3DRenderer (HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWidth);
 	~D3DRenderer();
 	bool Init();
-	void UpdateScene(const EnVector3 &camPos);
+	void UpdateScene(const EnMatrix4x4 &camPos);
 	void DrawScene();
 	void OnResize(UINT newHeight, UINT newWidth);
 	void CreateBuffer(CRenderableObject* newEnt);

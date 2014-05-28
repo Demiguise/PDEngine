@@ -18,7 +18,10 @@ enum ColliderType
 
 struct Contact
 {
-	Contact() {}
+	Contact() 
+		: penetration(0.0f) {}
+	Contact(EnVector3 initPoint, EnVector3 initNormal, float initP)
+		: contactPoint(initPoint), contactNormal(initNormal), penetration(initP) {}
 	EnVector3 contactPoint;
 	EnVector3 contactNormal;
 	float penetration;

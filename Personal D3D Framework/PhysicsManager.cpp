@@ -116,7 +116,7 @@ void PhysicsManager::ResolveCollisions(std::vector<CollisionPair>& possibleColli
 		Entity* entA = possibleCollisions[i].a;
 		Entity* entB = possibleCollisions[i].b;
 
-		float restitution = 0.0f; //Controls the elasticity of the collisions, 0 = inelastic & 1 = elastic.
+		float restitution = 1.0f; //Controls the elasticity of the collisions, 0 = inelastic & 1 = elastic.
 		float seperatingVelocity = (entA->velocity -  entB->velocity).ADot(possibleCollisions[i].data->contacts[0]->contactNormal);
 		float deltaVelocity = (-seperatingVelocity * restitution) - seperatingVelocity;
 		float totalInverseMass = 1.0f/(entA->rigidBody->mass) + 1.0f/(entB->rigidBody->mass);

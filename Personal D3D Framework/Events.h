@@ -14,5 +14,6 @@ class InputEvent : public IEvent
 public:
 	InputEvent();
 	~InputEvent();
+	EnVector2 mouseMovement;
 	GameKey keyEvent;
 };

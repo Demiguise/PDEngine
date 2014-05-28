@@ -32,10 +32,11 @@ public:
 	RigidBody* rigidBody;
 	BoundingBox AABB;
 
-private:
+protected:
 	void AddListeners();
 	void RemoveListener(std::string eventType);
 	void UpdateLocalToWorldMatrix();
 	void UpdateQuaternion();
+	void Init();
 };
 
