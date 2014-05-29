@@ -173,10 +173,32 @@ struct ModelData
 
 enum GameKey
 {
-	W,
 	A,
+	B,
+	C,
+	D,
+	E,
+	F,
+	G,
+	H,
+	I,
+	J,
+	K,
+	L,
+	M,
+	N,
+	O,
+	P,
+	Q,
+	R,
 	S,
-	D
+	T,
+	U,
+	V,
+	W,
+	X,
+	Y,
+	Z
 };
 
 //Common Namespaces

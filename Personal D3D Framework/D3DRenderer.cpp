@@ -199,12 +199,13 @@ void D3DRenderer::OnResize(UINT newHeight, UINT newWidth)
 	mProjMatrix = XMMatrixPerspectiveFovLH(0.25f*3.14f, newWidth/newHeight, 1.0f, 1000.0f);
 }
 
-void D3DRenderer::UpdateScene(const EnMatrix4x4 &camPos)
+void D3DRenderer::UpdateScene(const EnMatrix4x4& camPos, const EnVector3& target)
 {
-	//XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	//XMVECTOR camPosVector = XMVectorSet(camPos.x, camPos.y, camPos.z, 1.0f);
-	//mCamViewMatrix = XMMatrixLookAtLH(camPosVector, XMVectorZero(), up);
-	mCamViewMatrix = ConvertToXMMatrix(camPos);
+	XMVECTOR up = XMVectorSet(camPos.c[1].x, camPos.c[1].y, camPos.c[1].z, 1.0f);
+	XMVECTOR camPosVector = XMVectorSet(camPos.c[3].x, camPos.c[3].y, camPos.c[3].z, 1.0f);
+	XMVECTOR camTarget = XMVectorSet(target.x, target.y, target.z, 1.0f);
+	mCamViewMatrix = XMMatrixLookAtLH(camPosVector, camTarget, up);
+	//mCamViewMatrix = ConvertToXMMatrix(camPos);
 }
 
 void D3DRenderer::DrawScene()
@@ -233,7 +234,7 @@ void D3DRenderer::DrawScene()
 		{
 			mDeviceContext->IASetVertexBuffers(0, 1, &sceneData[i].bufferContents.vertexBuffer, &stride, &offset);
 			mDeviceContext->IASetIndexBuffer(sceneData[i].bufferContents.indexBuffer , DXGI_FORMAT_R32_UINT, 0);
-			XMMATRIX wvpMatrix = BuildWVPMatrix(sceneData[i].owningEntity->localToWorld, &mCamViewMatrix, &mProjMatrix);
+			XMMATRIX wvpMatrix = BuildWVPMatrix(sceneData[i].owningEntity->localToWorld, mCamViewMatrix, mProjMatrix);
 			mEffectWorldViewProj->SetMatrix(reinterpret_cast<float*>(&wvpMatrix));
 			mETech->GetPassByIndex(p)->Apply(0, mDeviceContext);
 			mDeviceContext->DrawIndexed(sceneData[i].bufferContents.iCount, 0, 0);
@@ -254,11 +255,11 @@ void D3DRenderer::DestroyBuffer(CRenderableObject* entity)
 
 }
 
-XMMATRIX D3DRenderer::BuildWVPMatrix(EnMatrix4x4 entWorldMatrix, XMMATRIX* view, XMMATRIX* proj)
+XMMATRIX D3DRenderer::BuildWVPMatrix(EnMatrix4x4& entWorldMatrix, XMMATRIX& view, XMMATRIX& proj)
 {
 	XMMATRIX worldMatrix = ConvertToXMMatrix(entWorldMatrix);
-	XMMATRIX lView = *view;
-	XMMATRIX lProj = *proj;
+	XMMATRIX lView = view;
+	XMMATRIX lProj = proj;
 	XMMATRIX newMatrix = worldMatrix * lView * lProj;
 	return newMatrix;
 }

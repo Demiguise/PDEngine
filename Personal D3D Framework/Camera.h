@@ -18,12 +18,12 @@ public:
 	bool OnEvent(IEvent* e);
 
 	float mouseSensitivity;
-	
+	EnVector3 lookAtTarget;
+	bool invertY;
 
 private:
 	void AddListeners();
 	void RemoveListener(std::string eventType);
-	void GhettoMove(EnVector3 direction);
 	void Init();
 
 	EnVector2 curMousePosition;

@@ -32,7 +32,8 @@ Camera::~Camera()
 
 void Camera::Init()
 {
-	mouseSensitivity = 0.45f;
+	mouseSensitivity = 0.15f;
+	invertY = false;
 	curMousePosition = EnVector2(400.0f, 300.0f);
 	AddListeners();
 }
@@ -54,7 +55,7 @@ void Camera::RemoveListener(std::string eventType)
 
 void Camera::Update()
 {
-
+	lookAtTarget = Util::ScalarProduct3D(GetLocalAxis(2), -2.0f) + position;
 	UpdateQuaternion();
 	UpdateLocalToWorldMatrix();
 	//Update our AABB to our current co-ordinates.
@@ -82,17 +83,23 @@ bool Camera::OnEvent(IEvent* e)
 		InputEvent* keyPress = static_cast<InputEvent*>(e);
 		switch (keyPress->keyEvent)
 		{
-		case GameKey::W:
-			GhettoMove(EnVector3(0.0f, 0.0f, -1.0f));
-			break;
 		case GameKey::A:
-			GhettoMove(EnVector3(1.0f, 0.0f, 0.0f));
-			break;
-		case GameKey::S:
-			GhettoMove(EnVector3(0.0f, 0.0f, 1.0f));
+			SetPosition(position + Util::ScalarProduct3D(GetLocalAxis(0), 0.1f));
 			break;
 		case GameKey::D:
-			GhettoMove(EnVector3(-1.0f, 0.0f, 0.0f));
+			SetPosition(position + Util::ScalarProduct3D(GetLocalAxis(0), -0.1f));
+			break;
+		case GameKey::E:
+			SetRotation(rotation + EnVector3(0.0f, 0.0f, -5.0f));
+			break;
+		case GameKey::Q:
+			SetRotation(rotation + EnVector3(0.0f, 0.0f, 5.0f));
+			break;
+		case GameKey::S:
+			SetPosition(position + Util::ScalarProduct3D(GetLocalAxis(2), 0.1f));
+			break;
+		case GameKey::W:
+			SetPosition(position + Util::ScalarProduct3D(GetLocalAxis(2), -0.1f));
 			break;
 		}
 		return true;
@@ -101,21 +108,14 @@ bool Camera::OnEvent(IEvent* e)
 	{
 		InputEvent* mouseMove = static_cast<InputEvent*>(e);
 		EnVector2 localMove = mouseMove->mouseMovement;
-		float deltaX = curMousePosition.x - mouseMove->mouseMovement.x;
-		float deltaY = curMousePosition.y - mouseMove->mouseMovement.y;
-		rotation += EnVector3((deltaY * mouseSensitivity), (deltaX * mouseSensitivity), 0.0f);
-		GameLog::GetInstance()->Log(DebugChannel::Events, DebugLevel::Normal, "[Events] Mouse cursor has moved by (%f, %f)", deltaX, deltaY);
+		//Change in the X position of the mouse means a rotation in the Y-axis as it's our up direction. This may be slightly confusing.
+		float deltaX = (curMousePosition.x - mouseMove->mouseMovement.x)* mouseSensitivity;
+		float deltaY = (curMousePosition.y - mouseMove->mouseMovement.y) * ((invertY)?-1:1) * mouseSensitivity;
+		EnVector3 newRotation = Util::ScalarProduct3D(GetLocalAxis(0), deltaY) + Util::ScalarProduct3D(GetLocalAxis(1), -deltaX);
+		SetRotation(rotation + newRotation);
+		
 		curMousePosition = localMove;
 	}
 
 	return false;
-}
-
-void Camera::GhettoMove(EnVector3 direction)
-{
-	EnVector3 newPosition = position + direction;
-	newPosition.x = position.x + GetLocalAxis(0).ADot(direction);
-	newPosition.y = position.y + GetLocalAxis(1).ADot(direction);
-	newPosition.z = position.z + GetLocalAxis(2).ADot(direction);
-	return SetPosition(newPosition);
 }

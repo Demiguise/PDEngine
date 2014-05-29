@@ -48,15 +48,17 @@ GameKey CInput::TranslateKeyPress(WPARAM wParam)
 {
 	switch(wParam)
 	{
-	case 65:
+	case 0x41:
 		return GameKey::A;
-	case 68:
+	case 0x44:
 		return GameKey::D;
-	case 83:
+	case 0x45:
+		return GameKey::E;
+	case 0x51:
+		return GameKey::Q;
+	case 0x53:
 		return GameKey::S;
-	case 87:
+	case 0x57:
 		return GameKey::W;
-	default:
-		return GameKey::A;
 	}
 }

@@ -11,7 +11,7 @@ public: //Functions
 	D3DRenderer (HINSTANCE hInstance, HWND hWnd, UINT wHeight, UINT wWidth);
 	~D3DRenderer();
 	bool Init();
-	void UpdateScene(const EnMatrix4x4 &camPos);
+	void UpdateScene(const EnMatrix4x4 &camPos, const EnVector3& target);
 	void DrawScene();
 	void OnResize(UINT newHeight, UINT newWidth);
 	void CreateBuffer(CRenderableObject* newEnt);
@@ -22,7 +22,7 @@ private:
 	bool InitBuffers();
 	void CreateInputLayer();
 	void InitEffects();
-	XMMATRIX BuildWVPMatrix(EnMatrix4x4 worldMatrix, XMMATRIX* view, XMMATRIX* proj);
+	XMMATRIX BuildWVPMatrix(EnMatrix4x4& worldMatrix, XMMATRIX& view, XMMATRIX& proj);
 	XMMATRIX ConvertToXMMatrix(EnMatrix4x4 m);
 
 	//DirectX COM Devices

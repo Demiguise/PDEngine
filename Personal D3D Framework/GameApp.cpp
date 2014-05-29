@@ -18,17 +18,20 @@ GameApp::GameApp(HINSTANCE hInstance)
 	mRenderer = new D3DRenderer(hInstance, mGameWindow->GetMainWHandle(),
 											mClientHeight, mClientWidth);
 	mSceneManager = new SceneManager(mFileManager);
+	//Setup Camera with Position and Rotation
 	mCamera = new Camera(mSceneManager->GenerateUID(),
 					EnVector3(0.0f, 0.0f, 30.0f),
-					EnVector3(0.0f, 45.0f, 0.0f));
+					EnVector3(0.0f, 0.0f, 0.0f));
 	mCamera->name = "Camera 1";
+	mSceneManager->RegisterEntity(mCamera);
+	mSceneManager->SetActiveCamera(mCamera);
+
 	std::vector<ModelData> colliders;
 	colliders.push_back(mFileManager->LoadModelData("Models/Colliders/RBCube.obj"));
 	colliders.push_back(mFileManager->LoadModelData("Models/Colliders/RBCylinder.obj"));
 	colliders.push_back(mFileManager->LoadModelData("Models/Colliders/RBSphere.obj"));
 	mPhysicsManager = new PhysicsManager(colliders);
-	mSceneManager->RegisterEntity(mCamera);
-	mSceneManager->SetActiveCamera(mCamera);
+
 	mTimer = new Timer();
 	physicsTimer = new Timer();
 	CreateTestObjects();
@@ -86,7 +89,7 @@ int GameApp::Run()
 			
 			mEventManager->Update();
 			mSceneManager->UpdateEntities();
-			mRenderer->UpdateScene(mSceneManager->activeCamera->localToWorld);
+			mRenderer->UpdateScene(mSceneManager->activeCamera->localToWorld, mSceneManager->activeCamera->lookAtTarget);
 			mRenderer->DrawScene();
 		}
 	}
